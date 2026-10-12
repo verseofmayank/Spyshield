@@ -23,8 +23,8 @@ If Python is not installed, download it from [python.org](https://www.python.org
 
 #### **2️⃣ Clone the Repository** (or Download the Code)  
 ```sh
-git clone https://github.com/Karnmayank07/Spyshield
-cd SpyShield
+git clone https://github.com/verseofmayank/Spyshield
+cd Spyshield
 ```
 Alternatively, you can **download the ZIP** from GitHub and extract it.  
 
@@ -47,3 +47,9 @@ It will start scanning for **suspicious processes and network activity**. If any
 
 ---
 
+
+---
+
+## Disclaimer
+
+> For **educational and authorized testing only**. Run only on systems you own or have explicit permission to test.

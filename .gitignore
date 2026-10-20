@@ -1,3 +1,11 @@
 detection.log
 __pycache__/
 *.pyc
+.venv/
+.pytest_cache/
+*.egg-info/
+spyshield-data/
+spyshield-reports/
+.env
+# local study notes are not part of the project
+docs/INTERVIEW_PREP.md

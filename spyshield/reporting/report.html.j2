@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'">
+<title>SpyShield investigation report</title>
+<style>
+:root{--bg:#f4f6f9;--card:#fff;--text:#1c2430;--muted:#5d6877;--line:#d8dee7;--accent:#0b6e99;--high:#c62828;--medium:#d9730d;--low:#a67c00;--info:#3b6fb6}
+@media (prefers-color-scheme:dark){:root{--bg:#0f141b;--card:#171e28;--text:#e4e9f0;--muted:#98a3b3;--line:#2a3544;--accent:#4fc3e8;--high:#ff6b6b;--medium:#ffa14a;--low:#e6c15a;--info:#7fb0f0}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px 48px}
+header{background:var(--card);border-bottom:1px solid var(--line);padding:22px 0;margin-bottom:18px}
+.brand{font-weight:700;letter-spacing:.18em;color:var(--accent);font-size:13px}
+h1{margin:4px 0;font-size:25px}h2{font-size:18px;margin:30px 0 10px;border-bottom:1px solid var(--line);padding-bottom:6px}
+.muted{color:var(--muted)}.mono{font-family:ui-monospace,Consolas,monospace;font-size:12.5px;word-break:break-all}
+.banner{border:2px dashed var(--medium);background:var(--card);padding:12px 16px;border-radius:8px;margin-bottom:16px;font-weight:600}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin:12px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 12px}.card b{display:block;font-size:24px}.card span{color:var(--muted);font-size:12px;text-transform:uppercase}
+.tag{display:inline-block;padding:1px 8px;border-radius:999px;font-size:12px;font-weight:600;border:1px solid currentColor}
+.sev-high{color:var(--high)}.sev-medium{color:var(--medium)}.sev-low{color:var(--low)}.sev-info{color:var(--info)}
+.table-wrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:13.5px}th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}th{white-space:nowrap}
+details.alert{background:var(--card);border:1px solid var(--line);border-left:5px solid currentColor;border-radius:8px;margin:10px 0}
+details.alert>summary{cursor:pointer;padding:10px 14px;font-weight:600;color:var(--text)}
+.body{padding:0 14px 12px;color:var(--text)}dl{display:grid;grid-template-columns:150px 1fr;gap:4px 12px;margin:8px 0}dt{color:var(--muted)}dd{margin:0;word-break:break-word}
+.note{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 14px;color:var(--muted)}
+ul{margin:4px 0;padding-left:20px}footer{margin-top:36px;color:var(--muted);font-size:12.5px}
+@media (max-width:560px){dl{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+{% macro table(rows, cols) %}
+{% if rows %}<div class="table-wrap"><table><tr>{% for c in cols %}<th>{{ c[0] }}</th>{% endfor %}</tr>
+{% for row in rows[:max_rows] %}<tr>{% for c in cols %}{% set v = row.get(c[1]) %}{% if v is none %}{% set v = row.get('data', {}).get(c[1]) %}{% endif %}<td class="{{ 'mono' if c[2] else '' }}">{{ v if v is not none else '' }}</td>{% endfor %}</tr>
+{% endfor %}</table></div>{% if rows | length > max_rows %}<p class="muted">Showing {{ max_rows }} of {{ rows | length }} rows; the JSON report has all of them.</p>{% endif %}
+{% else %}<p class="muted">None observed.</p>{% endif %}
+{% endmacro %}
+<header><div class="wrap">
+<div class="brand">SPYSHIELD &middot; HOST-BASED DETECTION</div>
+<h1>{{ r.investigation.title }}</h1>
+<div class="muted">Generated {{ r.investigation.generated_at }} &middot; window {{ r.investigation.timeframe.start or "n/a" }} to {{ r.investigation.timeframe.end or "n/a" }} (UTC) &middot; host(s): {{ r.investigation.hosts | join(", ") or "n/a" }}</div>
+<div class="muted">System: {{ r.investigation.system.os }} {{ r.investigation.system.os_release }} ({{ r.investigation.system.machine }}), Python {{ r.investigation.system.python }} &middot; {{ r.tool.name }} {{ r.tool.version }} by {{ r.tool.author }}</div>
+</div></header>
+<main class="wrap">
+{% if r.investigation.mode != "live" %}<div class="banner">SYNTHETIC DATA &mdash; produced by the offline demonstration from labelled fixtures. It is NOT a record of real endpoint activity.</div>{% endif %}
+<div class="cards">
+<div class="card"><b>{{ r.summary.events_analyzed }}</b><span>events analyzed</span></div>
+<div class="card"><b>{{ r.summary.alerts }}</b><span>alerts</span></div>
+{% for s in sevs %}<div class="card"><b class="sev-{{ s }}">{{ r.summary.alerts_by_severity[s] }}</b><span>{{ s }}</span></div>{% endfor %}
+</div>
+<div class="note">Alerts are <strong>observations that require analyst review</strong>, not verdicts of malware. Severity and confidence come from stated rule conditions; there is no opaque risk score.</div>
+
+<h2>Alerts</h2>
+{% if not r.alerts %}<p class="muted">No alerts were raised by the rules that could be evaluated with the telemetry collected.</p>{% endif %}
+{% for a in r.alerts %}
+<details class="alert sev-{{ a.severity }}" {% if a.severity in ("high", "medium") %}open{% endif %}>
+<summary><span class="tag sev-{{ a.severity }}">{{ a.severity | upper }}</span> <span class="mono">{{ a.rule_id }}</span> {{ a.title }}</summary>
+<div class="body"><dl>
+<dt>Observation</dt><dd>{{ a.observation }}</dd>
+<dt>Time (UTC) / host</dt><dd>{{ a.ts }} &middot; {{ a.host }}</dd>
+{% if a.process %}<dt>Process</dt><dd class="mono">{{ a.process.name }} (PID {{ a.process.pid }}) {{ a.process.image }}{% if a.process.cmdline %}<br>cmd: {{ a.process.cmdline }}{% endif %}{% if a.process.parent_image %}<br>parent: {{ a.process.parent_image }}{% endif %}</dd>{% endif %}
+<dt>Conditions met</dt><dd><ul>{% for c in a.conditions_met %}<li>{{ c }}</li>{% endfor %}</ul></dd>
+<dt>Evidence</dt><dd><ul>{% for e in a.evidence %}<li class="mono">{{ e | jsonc }}</li>{% endfor %}</ul></dd>
+<dt>Confidence</dt><dd>{{ a.confidence }} &mdash; {{ a.limitations }}</dd>
+{% if a.mitre %}<dt>MITRE ATT&amp;CK</dt><dd>{% for m in a.mitre %}{{ m.id }} {{ m.name }}{% if not loop.last %}; {% endif %}{% endfor %}</dd>{% endif %}
+<dt>Possible false positives</dt><dd><ul>{% for f in a.false_positives %}<li>{{ f }}</li>{% endfor %}</ul></dd>
+<dt>Investigation steps</dt><dd><ul>{% for s in a.investigation_steps %}<li>{{ s }}</li>{% endfor %}</ul></dd>
+<dt>Status</dt><dd>{{ a.status }}{% if a.suppressed_count %} &middot; {{ a.suppressed_count }} repeat(s) suppressed by cooldown{% endif %} &middot; ID {{ a.alert_id }}</dd>
+</dl></div>
+</details>
+{% endfor %}
+
+{% if r.evaluation %}
+<h2>Labelled synthetic scenario results</h2>
+<p class="muted">{{ r.evaluation.caveat }}</p>
+<div class="table-wrap"><table><tr><th>ID</th><th>Scenario</th><th>Label</th><th>Expected</th><th>Alerted</th><th>Outcome</th></tr>
+{% for s in r.evaluation.rows %}<tr><td>{{ s.id }}</td><td>{{ s.title }}</td><td>{{ s.label }}</td><td class="mono">{{ s.expected | join(", ") }}</td><td class="mono">{{ s.got | join(", ") }}</td><td>{{ s.outcome }}</td></tr>{% endfor %}
+</table></div>
+<p>TP {{ r.evaluation.TP }} &middot; FN {{ r.evaluation.FN }} &middot; TN {{ r.evaluation.TN }} &middot; FP {{ r.evaluation.FP }}</p>
+{% endif %}
+
+<h2>Process observations ({{ r.observations.processes | length }})</h2>
+{{ table(r.observations.processes, [("Start (UTC)", "ts", false), ("PID", "pid", false), ("Name", "name", false), ("Image", "image", true), ("Parent", "parent_image", true), ("Command line (redacted)", "cmdline", true)]) }}
+
+<h2>Network observations ({{ r.observations.network | length }})</h2>
+{{ table(r.observations.network, [("Time (UTC)", "ts", false), ("PID", "pid", false), ("Process", "name", false), ("Remote IP", "remote_ip", true), ("Port", "remote_port", false), ("Class", "remote_class", false), ("State", "state", false)]) }}
+
+<h2>File integrity changes ({{ r.observations.file_changes | length }})</h2>
+{{ table(r.observations.file_changes, [("Time (UTC)", "ts", false), ("Change", "change", false), ("Path", "path", true), ("Basis", "basis", false)]) }}
+
+<h2>Persistence changes ({{ (r.observations.persistence | length) + (r.observations.registry | length) }})</h2>
+{{ table(r.observations.persistence, [("Time (UTC)", "ts", false), ("Change", "change", false), ("Location", "location", true), ("Entry", "entry_name", false), ("Target", "target_path", true)]) }}
+
+<h2>MITRE ATT&amp;CK references</h2>
+{% if r.mitre %}<ul>{% for m in r.mitre %}<li><strong>{{ m.id }}</strong> {{ m.name }} <span class="muted">(rules: {{ m.rules | join(", ") }})</span></li>{% endfor %}</ul>
+<p class="muted">Mappings are applied only where the observed evidence matches the technique's mechanism; they describe behaviour, not attacker intent.</p>
+{% else %}<p class="muted">No alert in this report carries a MITRE mapping.</p>{% endif %}
+
+{% if r.parse_reports %}<h2>Event parsing</h2><ul>{% for p in r.parse_reports %}<li>{{ p.source }}: {{ p.parsed }} parsed, {{ p.malformed }} malformed, {{ p.skipped_unsupported }} unsupported of {{ p.total }}</li>{% endfor %}</ul>{% endif %}
+
+<h2>Detection limitations</h2>
+<ul>{% for l in r.limitations %}<li>{{ l }}</li>{% endfor %}</ul>
+{% if r.investigation.notes %}<h2>Notes</h2><ul>{% for n in r.investigation.notes %}<li>{{ n }}</li>{% endfor %}</ul>{% endif %}
+<footer>Generated by SpyShield &middot; schema {{ r.schema_version }}. Defensive, read-only monitoring: SpyShield never terminates processes or changes the system.</footer>
+</main>
+</body>
+</html>

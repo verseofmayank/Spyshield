@@ -1,0 +1,1524 @@
+{
+ "_comment": "Synthetic, clearly labelled scenarios. Offsets are seconds after 2026-10-01T10:00:00Z. No real malware is executed.",
+ "base_time": "2026-10-01T10:00:00Z",
+ "scenarios": [
+  {
+   "id": "S01",
+   "title": "Normal process activity",
+   "label": "benign",
+   "expected_rules": [],
+   "events": [
+    {
+     "t": 0,
+     "kind": "process_start",
+     "key": "explorer",
+     "pid": 600,
+     "ppid": 500,
+     "parent": null,
+     "image": "C:\\Windows\\explorer.exe",
+     "user": "DEMO\\user"
+    },
+    {
+     "t": 10,
+     "kind": "process_start",
+     "key": "chrome",
+     "pid": 700,
+     "ppid": 600,
+     "parent": "explorer",
+     "image": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+     "user": "DEMO\\user",
+     "cmd": "chrome.exe --profile-directory=Default"
+    },
+    {
+     "t": 12,
+     "kind": "process_start",
+     "key": "notepad",
+     "pid": 710,
+     "ppid": 600,
+     "parent": "explorer",
+     "image": "C:\\Windows\\System32\\notepad.exe",
+     "user": "DEMO\\user"
+    }
+   ]
+  },
+  {
+   "id": "S02",
+   "title": "Normal outbound connections (including non-80/443 ports, loopback, private)",
+   "label": "benign",
+   "expected_rules": [],
+   "events": [
+    {
+     "t": 0,
+     "kind": "process_start",
+     "key": "explorer",
+     "pid": 600,
+     "ppid": 500,
+     "parent": null,
+     "image": "C:\\Windows\\explorer.exe",
+     "user": "DEMO\\user"
+    },
+    {
+     "t": 10,
+     "kind": "process_start",
+     "key": "chrome",
+     "pid": 700,
+     "ppid": 600,
+     "parent": "explorer",
+     "image": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+     "user": "DEMO\\user"
+    },
+    {
+     "t": 20,
+     "kind": "network_connection",
+     "key": "chrome",
+     "pid": 700,
+     "remote_ip": "142.250.77.14",
+     "remote_port": 443,
+     "local_port": 50001
+    },
+    {
+     "t": 21,
+     "kind": "network_connection",
+     "key": "chrome",
+     "pid": 700,
+     "remote_ip": "142.250.77.14",
+     "remote_port": 5228,
+     "local_port": 50002
+    },
+    {
+     "t": 22,
+     "kind": "network_connection",
+     "key": "chrome",
+     "pid": 700,
+     "remote_ip": "104.18.20.10",
+     "remote_port": 8443,
+     "local_port": 50003
+    },
+    {
+     "t": 23,
+     "kind": "network_connection",
+     "key": "chrome",
+     "pid": 700,
+     "remote_ip": "127.0.0.1",
+     "remote_port": 49693,
+     "local_port": 50004
+    },
+    {
+     "t": 24,
+     "kind": "network_connection",
+     "key": "chrome",
+     "pid": 700,
+     "remote_ip": "192.168.1.10",
+     "remote_port": 445,
+     "local_port": 50005
+    }
+   ]
+  },
+  {
+   "id": "S03",
+   "title": "Simulated executable launched from a temp directory",
+   "label": "should_alert",
+   "expected_rules": [
+    "SHIELD-001"
+   ],
+   "events": [
+    {
+     "t": 0,
+     "kind": "process_start",
+     "key": "explorer",
+     "pid": 600,
+     "ppid": 500,
+     "parent": null,
+     "image": "C:\\Windows\\explorer.exe",
+     "user": "DEMO\\user"
+    },
+    {
+     "t": 30,
+     "kind": "process_start",
+     "key": "upd",
+     "pid": 800,
+     "ppid": 600,
+     "parent": "explorer",
+     "image": "C:\\Users\\demo\\AppData\\Local\\Temp\\vestige_demo\\updater_sim.exe",
+     "user": "DEMO\\user",
+     "cmd": "updater_sim.exe --demo"
+    }
+   ]
+  },
+  {
+   "id": "S04",
+   "title": "Simulated new Registry Run entry",
+   "label": "should_alert",
+   "expected_rules": [
+    "SHIELD-003"
+   ],
+   "kind": "persistence",
+   "before": [
+    {
+     "hive": "HKCU",
+     "key": "Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+     "name": "OneDrive",
+     "data": "\"C:\\Program Files\\Microsoft OneDrive\\OneDrive.exe\" /background"
+    }
+   ],
+   "after": [
+    {
+     "hive": "HKCU",
+     "key": "Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+     "name": "OneDrive",
+     "data": "\"C:\\Program Files\\Microsoft OneDrive\\OneDrive.exe\" /background"
+    },
+    {
+     "hive": "HKCU",
+     "key": "Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+     "name": "SystemHelperDemo",
+     "data": "\"C:\\Users\\Public\\helper_sim.exe\" --silent"
+    }
+   ]
+  },
+  {
+   "id": "S05",
+   "title": "Simulated process from temp that makes an outbound connection",
+   "label": "should_alert",
+   "expected_rules": [
+    "SHIELD-001",
+    "SHIELD-004"
+   ],
+   "events": [
+    {
+     "t": 0,
+     "kind": "process_start",
+     "key": "explorer",
+     "pid": 600,
+     "ppid": 500,
+     "parent": null,
+     "image": "C:\\Windows\\explorer.exe",
+     "user": "DEMO\\user"
+    },
+    {
+     "t": 30,
+     "kind": "process_start",
+     "key": "upd",
+     "pid": 800,
+     "ppid": 600,
+     "parent": "explorer",
+     "image": "C:\\Users\\demo\\AppData\\Local\\Temp\\vestige_demo\\fetcher_sim.exe",
+     "user": "DEMO\\user"
+    },
+    {
+     "t": 75,
+     "kind": "network_connection",
+     "key": "upd",
+     "pid": 800,
+     "remote_ip": "104.20.30.50",
+     "remote_port": 8443,
+     "local_port": 51000
+    }
+   ]
+  },
+  {
+   "id": "S06",
+   "title": "Modified file in a temporary test folder",
+   "label": "should_alert",
+   "expected_rules": [
+    "SHIELD-005"
+   ],
+   "kind": "fim",
+   "create": {
+    "a.txt": "alpha",
+    "b.txt": "bravo",
+    "c.txt": "charlie"
+   },
+   "mutate": {
+    "modify": {
+     "b.txt": "bravo-changed"
+    }
+   }
+  },
+  {
+   "id": "S07",
+   "title": "Unchanged file baseline",
+   "label": "benign",
+   "expected_rules": [],
+   "kind": "fim",
+   "create": {
+    "a.txt": "alpha",
+    "b.txt": "bravo"
+   },
+   "mutate": {}
+  },
+  {
+   "id": "S08",
+   "title": "Configured hash IOC match (synthetic hash)",
+   "label": "should_alert",
+   "expected_rules": [
+    "SHIELD-009"
+   ],
+   "events": [
+    {
+     "t": 0,
+     "kind": "process_start",
+     "key": "explorer",
+     "pid": 600,
+     "ppid": 500,
+     "parent": null,
+     "image": "C:\\Windows\\explorer.exe",
+     "user": "DEMO\\user"
+    },
+    {
+     "t": 40,
+     "kind": "process_start",
+     "key": "ioc",
+     "pid": 810,
+     "ppid": 600,
+     "parent": "explorer",
+     "image": "C:\\Program Files\\DemoApp\\demoapp.exe",
+     "user": "DEMO\\user",
+     "sha256": "0000000000000000000000000000000000000000000000000000000000000001"
+    }
+   ]
+  },
+  {
+   "id": "S09",
+   "title": "Noisy application with 'Spy'/'Record'/'Capture' in its name (must not get a malware verdict)",
+   "label": "benign",
+   "expected_rules": [],
+   "events": [
+    {
+     "t": 0,
+     "kind": "process_start",
+     "key": "explorer",
+     "pid": 600,
+     "ppid": 500,
+     "parent": null,
+     "image": "C:\\Windows\\explorer.exe",
+     "user": "DEMO\\user"
+    },
+    {
+     "t": 5,
+     "kind": "process_start",
+     "key": "noisy",
+     "pid": 900,
+     "ppid": 600,
+     "parent": "explorer",
+     "image": "C:\\Program Files\\SpyGlass\\SpyGlass-Recorder.exe",
+     "user": "DEMO\\user",
+     "cmd": "SpyGlass-Recorder.exe --capture-screen-demo"
+    },
+    {
+     "t": 10,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "104.20.31.1",
+     "remote_port": 443,
+     "local_port": 52000
+    },
+    {
+     "t": 12,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "104.20.31.2",
+     "remote_port": 443,
+     "local_port": 52001
+    },
+    {
+     "t": 14,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "104.20.31.3",
+     "remote_port": 443,
+     "local_port": 52002
+    },
+    {
+     "t": 16,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "104.20.31.4",
+     "remote_port": 443,
+     "local_port": 52003
+    },
+    {
+     "t": 18,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "104.20.31.5",
+     "remote_port": 443,
+     "local_port": 52004
+    },
+    {
+     "t": 20,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "104.20.31.6",
+     "remote_port": 443,
+     "local_port": 52005
+    },
+    {
+     "t": 22,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "104.20.31.7",
+     "remote_port": 443,
+     "local_port": 52006
+    },
+    {
+     "t": 24,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "104.20.31.8",
+     "remote_port": 443,
+     "local_port": 52007
+    },
+    {
+     "t": 26,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "104.20.31.9",
+     "remote_port": 443,
+     "local_port": 52008
+    },
+    {
+     "t": 28,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "104.20.31.10",
+     "remote_port": 443,
+     "local_port": 52009
+    },
+    {
+     "t": 30,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "104.20.31.11",
+     "remote_port": 443,
+     "local_port": 52010
+    },
+    {
+     "t": 32,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "104.20.31.12",
+     "remote_port": 443,
+     "local_port": 52011
+    },
+    {
+     "t": 34,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "104.20.31.13",
+     "remote_port": 443,
+     "local_port": 52012
+    },
+    {
+     "t": 36,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "104.20.31.14",
+     "remote_port": 443,
+     "local_port": 52013
+    },
+    {
+     "t": 38,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "104.20.31.15",
+     "remote_port": 443,
+     "local_port": 52014
+    },
+    {
+     "t": 40,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "104.20.31.16",
+     "remote_port": 443,
+     "local_port": 52015
+    },
+    {
+     "t": 42,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "104.20.31.17",
+     "remote_port": 443,
+     "local_port": 52016
+    },
+    {
+     "t": 44,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "104.20.31.18",
+     "remote_port": 443,
+     "local_port": 52017
+    },
+    {
+     "t": 46,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "104.20.31.19",
+     "remote_port": 443,
+     "local_port": 52018
+    },
+    {
+     "t": 48,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "104.20.31.20",
+     "remote_port": 443,
+     "local_port": 52019
+    },
+    {
+     "t": 11,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.1",
+     "remote_port": 8000,
+     "local_port": 53000
+    },
+    {
+     "t": 12,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.2",
+     "remote_port": 8001,
+     "local_port": 53001
+    },
+    {
+     "t": 13,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.3",
+     "remote_port": 8002,
+     "local_port": 53002
+    },
+    {
+     "t": 14,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.4",
+     "remote_port": 8003,
+     "local_port": 53003
+    },
+    {
+     "t": 15,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.5",
+     "remote_port": 8004,
+     "local_port": 53004
+    },
+    {
+     "t": 16,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.6",
+     "remote_port": 8005,
+     "local_port": 53005
+    },
+    {
+     "t": 17,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.7",
+     "remote_port": 8006,
+     "local_port": 53006
+    },
+    {
+     "t": 18,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.8",
+     "remote_port": 8007,
+     "local_port": 53007
+    },
+    {
+     "t": 19,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.9",
+     "remote_port": 8008,
+     "local_port": 53008
+    },
+    {
+     "t": 20,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.10",
+     "remote_port": 8009,
+     "local_port": 53009
+    },
+    {
+     "t": 21,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.11",
+     "remote_port": 8010,
+     "local_port": 53010
+    },
+    {
+     "t": 22,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.12",
+     "remote_port": 8011,
+     "local_port": 53011
+    },
+    {
+     "t": 23,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.13",
+     "remote_port": 8012,
+     "local_port": 53012
+    },
+    {
+     "t": 24,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.14",
+     "remote_port": 8013,
+     "local_port": 53013
+    },
+    {
+     "t": 25,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.15",
+     "remote_port": 8014,
+     "local_port": 53014
+    },
+    {
+     "t": 26,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.16",
+     "remote_port": 8015,
+     "local_port": 53015
+    },
+    {
+     "t": 27,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.17",
+     "remote_port": 8016,
+     "local_port": 53016
+    },
+    {
+     "t": 28,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.18",
+     "remote_port": 8017,
+     "local_port": 53017
+    },
+    {
+     "t": 29,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.19",
+     "remote_port": 8018,
+     "local_port": 53018
+    },
+    {
+     "t": 30,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.20",
+     "remote_port": 8019,
+     "local_port": 53019
+    },
+    {
+     "t": 31,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.1",
+     "remote_port": 8020,
+     "local_port": 53020
+    },
+    {
+     "t": 32,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.2",
+     "remote_port": 8021,
+     "local_port": 53021
+    },
+    {
+     "t": 33,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.3",
+     "remote_port": 8022,
+     "local_port": 53022
+    },
+    {
+     "t": 34,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.4",
+     "remote_port": 8023,
+     "local_port": 53023
+    },
+    {
+     "t": 35,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.5",
+     "remote_port": 8024,
+     "local_port": 53024
+    },
+    {
+     "t": 36,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.6",
+     "remote_port": 8025,
+     "local_port": 53025
+    },
+    {
+     "t": 37,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.7",
+     "remote_port": 8026,
+     "local_port": 53026
+    },
+    {
+     "t": 38,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.8",
+     "remote_port": 8027,
+     "local_port": 53027
+    },
+    {
+     "t": 39,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.9",
+     "remote_port": 8028,
+     "local_port": 53028
+    },
+    {
+     "t": 40,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.10",
+     "remote_port": 8029,
+     "local_port": 53029
+    },
+    {
+     "t": 41,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.11",
+     "remote_port": 8030,
+     "local_port": 53030
+    },
+    {
+     "t": 42,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.12",
+     "remote_port": 8031,
+     "local_port": 53031
+    },
+    {
+     "t": 43,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.13",
+     "remote_port": 8032,
+     "local_port": 53032
+    },
+    {
+     "t": 44,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.14",
+     "remote_port": 8033,
+     "local_port": 53033
+    },
+    {
+     "t": 45,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.15",
+     "remote_port": 8034,
+     "local_port": 53034
+    },
+    {
+     "t": 46,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.16",
+     "remote_port": 8035,
+     "local_port": 53035
+    },
+    {
+     "t": 47,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.17",
+     "remote_port": 8036,
+     "local_port": 53036
+    },
+    {
+     "t": 48,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.18",
+     "remote_port": 8037,
+     "local_port": 53037
+    },
+    {
+     "t": 49,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.19",
+     "remote_port": 8038,
+     "local_port": 53038
+    },
+    {
+     "t": 50,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.20",
+     "remote_port": 8039,
+     "local_port": 53039
+    },
+    {
+     "t": 51,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.1",
+     "remote_port": 8040,
+     "local_port": 53040
+    },
+    {
+     "t": 52,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.2",
+     "remote_port": 8041,
+     "local_port": 53041
+    },
+    {
+     "t": 53,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.3",
+     "remote_port": 8042,
+     "local_port": 53042
+    },
+    {
+     "t": 54,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.4",
+     "remote_port": 8043,
+     "local_port": 53043
+    },
+    {
+     "t": 55,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.5",
+     "remote_port": 8044,
+     "local_port": 53044
+    },
+    {
+     "t": 56,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.6",
+     "remote_port": 8045,
+     "local_port": 53045
+    },
+    {
+     "t": 57,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.7",
+     "remote_port": 8046,
+     "local_port": 53046
+    },
+    {
+     "t": 58,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.8",
+     "remote_port": 8047,
+     "local_port": 53047
+    },
+    {
+     "t": 59,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.9",
+     "remote_port": 8048,
+     "local_port": 53048
+    },
+    {
+     "t": 60,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.10",
+     "remote_port": 8049,
+     "local_port": 53049
+    },
+    {
+     "t": 61,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.11",
+     "remote_port": 8050,
+     "local_port": 53050
+    },
+    {
+     "t": 62,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.12",
+     "remote_port": 8051,
+     "local_port": 53051
+    },
+    {
+     "t": 63,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.13",
+     "remote_port": 8052,
+     "local_port": 53052
+    },
+    {
+     "t": 64,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.14",
+     "remote_port": 8053,
+     "local_port": 53053
+    },
+    {
+     "t": 65,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.15",
+     "remote_port": 8054,
+     "local_port": 53054
+    },
+    {
+     "t": 66,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.16",
+     "remote_port": 8055,
+     "local_port": 53055
+    },
+    {
+     "t": 67,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.17",
+     "remote_port": 8056,
+     "local_port": 53056
+    },
+    {
+     "t": 68,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.18",
+     "remote_port": 8057,
+     "local_port": 53057
+    },
+    {
+     "t": 69,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.19",
+     "remote_port": 8058,
+     "local_port": 53058
+    },
+    {
+     "t": 70,
+     "kind": "network_connection",
+     "key": "noisy",
+     "pid": 900,
+     "remote_ip": "10.0.0.20",
+     "remote_port": 8059,
+     "local_port": 53059
+    }
+   ]
+  },
+  {
+   "id": "S10",
+   "title": "Malformed Sysmon events mixed with valid benign events",
+   "label": "benign",
+   "expected_rules": [],
+   "kind": "sysmon",
+   "file": "samples/sysmon_malformed.xml"
+  },
+  {
+   "id": "S11",
+   "title": "Document application launching a command interpreter",
+   "label": "should_alert",
+   "expected_rules": [
+    "SHIELD-002"
+   ],
+   "events": [
+    {
+     "t": 0,
+     "kind": "process_start",
+     "key": "explorer",
+     "pid": 600,
+     "ppid": 500,
+     "parent": null,
+     "image": "C:\\Windows\\explorer.exe",
+     "user": "DEMO\\user"
+    },
+    {
+     "t": 10,
+     "kind": "process_start",
+     "key": "word",
+     "pid": 1000,
+     "ppid": 600,
+     "parent": "explorer",
+     "image": "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE",
+     "user": "DEMO\\user"
+    },
+    {
+     "t": 25,
+     "kind": "process_start",
+     "key": "ps",
+     "pid": 1010,
+     "ppid": 1000,
+     "parent": "word",
+     "image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+     "user": "DEMO\\user",
+     "cmd": "powershell.exe -NoProfile -Command Get-Date"
+    }
+   ]
+  },
+  {
+   "id": "S12",
+   "title": "New startup entry followed by execution of the referenced file",
+   "label": "should_alert",
+   "expected_rules": [
+    "SHIELD-001",
+    "SHIELD-003",
+    "SHIELD-008"
+   ],
+   "kind": "persistence_exec",
+   "before": [],
+   "after": [
+    {
+     "hive": "HKCU",
+     "key": "Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+     "name": "UpdaterDemo",
+     "data": "\"C:\\Users\\Public\\runner_sim.exe\""
+    }
+   ],
+   "events": [
+    {
+     "t": 0,
+     "kind": "process_start",
+     "key": "explorer",
+     "pid": 600,
+     "ppid": 500,
+     "parent": null,
+     "image": "C:\\Windows\\explorer.exe",
+     "user": "DEMO\\user"
+    },
+    {
+     "t": 300,
+     "kind": "process_start",
+     "key": "run",
+     "pid": 1100,
+     "ppid": 600,
+     "parent": "explorer",
+     "image": "C:\\Users\\Public\\runner_sim.exe",
+     "user": "DEMO\\user"
+    }
+   ]
+  },
+  {
+   "id": "S13",
+   "title": "High outbound destination count from one process",
+   "label": "should_alert",
+   "expected_rules": [
+    "SHIELD-006"
+   ],
+   "events": [
+    {
+     "t": 0,
+     "kind": "process_start",
+     "key": "explorer",
+     "pid": 600,
+     "ppid": 500,
+     "parent": null,
+     "image": "C:\\Windows\\explorer.exe",
+     "user": "DEMO\\user"
+    },
+    {
+     "t": 5,
+     "kind": "process_start",
+     "key": "scan",
+     "pid": 1200,
+     "ppid": 600,
+     "parent": "explorer",
+     "image": "C:\\Program Files\\SyncTool\\synctool.exe",
+     "user": "DEMO\\user"
+    },
+    {
+     "t": 10,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.0.5",
+     "remote_port": 443,
+     "local_port": 54000
+    },
+    {
+     "t": 11,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.1.5",
+     "remote_port": 443,
+     "local_port": 54001
+    },
+    {
+     "t": 12,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.2.5",
+     "remote_port": 443,
+     "local_port": 54002
+    },
+    {
+     "t": 13,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.3.5",
+     "remote_port": 443,
+     "local_port": 54003
+    },
+    {
+     "t": 14,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.4.5",
+     "remote_port": 443,
+     "local_port": 54004
+    },
+    {
+     "t": 15,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.5.5",
+     "remote_port": 443,
+     "local_port": 54005
+    },
+    {
+     "t": 16,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.6.5",
+     "remote_port": 443,
+     "local_port": 54006
+    },
+    {
+     "t": 17,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.7.5",
+     "remote_port": 443,
+     "local_port": 54007
+    },
+    {
+     "t": 18,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.8.5",
+     "remote_port": 443,
+     "local_port": 54008
+    },
+    {
+     "t": 19,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.9.5",
+     "remote_port": 443,
+     "local_port": 54009
+    },
+    {
+     "t": 20,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.10.5",
+     "remote_port": 443,
+     "local_port": 54010
+    },
+    {
+     "t": 21,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.11.5",
+     "remote_port": 443,
+     "local_port": 54011
+    },
+    {
+     "t": 22,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.12.5",
+     "remote_port": 443,
+     "local_port": 54012
+    },
+    {
+     "t": 23,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.13.5",
+     "remote_port": 443,
+     "local_port": 54013
+    },
+    {
+     "t": 24,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.14.5",
+     "remote_port": 443,
+     "local_port": 54014
+    },
+    {
+     "t": 25,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.15.5",
+     "remote_port": 443,
+     "local_port": 54015
+    },
+    {
+     "t": 26,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.16.5",
+     "remote_port": 443,
+     "local_port": 54016
+    },
+    {
+     "t": 27,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.17.5",
+     "remote_port": 443,
+     "local_port": 54017
+    },
+    {
+     "t": 28,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.18.5",
+     "remote_port": 443,
+     "local_port": 54018
+    },
+    {
+     "t": 29,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.19.5",
+     "remote_port": 443,
+     "local_port": 54019
+    },
+    {
+     "t": 30,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.20.5",
+     "remote_port": 443,
+     "local_port": 54020
+    },
+    {
+     "t": 31,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.21.5",
+     "remote_port": 443,
+     "local_port": 54021
+    },
+    {
+     "t": 32,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.22.5",
+     "remote_port": 443,
+     "local_port": 54022
+    },
+    {
+     "t": 33,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.23.5",
+     "remote_port": 443,
+     "local_port": 54023
+    },
+    {
+     "t": 34,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.24.5",
+     "remote_port": 443,
+     "local_port": 54024
+    },
+    {
+     "t": 35,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.25.5",
+     "remote_port": 443,
+     "local_port": 54025
+    },
+    {
+     "t": 36,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.26.5",
+     "remote_port": 443,
+     "local_port": 54026
+    },
+    {
+     "t": 37,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.27.5",
+     "remote_port": 443,
+     "local_port": 54027
+    },
+    {
+     "t": 38,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.28.5",
+     "remote_port": 443,
+     "local_port": 54028
+    },
+    {
+     "t": 39,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.29.5",
+     "remote_port": 443,
+     "local_port": 54029
+    },
+    {
+     "t": 40,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.30.5",
+     "remote_port": 443,
+     "local_port": 54030
+    },
+    {
+     "t": 41,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.31.5",
+     "remote_port": 443,
+     "local_port": 54031
+    },
+    {
+     "t": 42,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.32.5",
+     "remote_port": 443,
+     "local_port": 54032
+    },
+    {
+     "t": 43,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.33.5",
+     "remote_port": 443,
+     "local_port": 54033
+    },
+    {
+     "t": 44,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.34.5",
+     "remote_port": 443,
+     "local_port": 54034
+    },
+    {
+     "t": 45,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.35.5",
+     "remote_port": 443,
+     "local_port": 54035
+    },
+    {
+     "t": 46,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.36.5",
+     "remote_port": 443,
+     "local_port": 54036
+    },
+    {
+     "t": 47,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.37.5",
+     "remote_port": 443,
+     "local_port": 54037
+    },
+    {
+     "t": 48,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.38.5",
+     "remote_port": 443,
+     "local_port": 54038
+    },
+    {
+     "t": 49,
+     "kind": "network_connection",
+     "key": "scan",
+     "pid": 1200,
+     "remote_ip": "104.21.39.5",
+     "remote_port": 443,
+     "local_port": 54039
+    }
+   ]
+  },
+  {
+   "id": "S14",
+   "title": "Sysmon export: Office -> PowerShell -> outbound connection (ProcessGuid correlation)",
+   "label": "should_alert",
+   "expected_rules": [
+    "SHIELD-002",
+    "SHIELD-003",
+    "SHIELD-007"
+   ],
+   "kind": "sysmon",
+   "file": "samples/sysmon_events.xml"
+  }
+ ]
+}

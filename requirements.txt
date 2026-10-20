@@ -1,1 +1,7 @@
-psutil
+# Runtime dependencies (purpose in brackets)
+psutil>=5.9        # process and connection enumeration
+watchdog>=4.0      # optional real-time file watching (FIM watch mode)
+PyYAML>=6.0        # rule and watchlist files
+rich>=13.7         # terminal UI
+click>=8.1         # command-line interface
+Jinja2>=3.1        # standalone HTML report with autoescaping

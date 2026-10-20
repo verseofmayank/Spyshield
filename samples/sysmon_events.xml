@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SYNTHETIC Sysmon export for SpyShield demos. Hand-written; produced by no real host and no malware.
+     Includes: process create (1), network connect (3), terminate (5), file create (11), registry value set (13),
+     DNS query (22), an unsupported event (7), a malformed event, and one out-of-order event. -->
+<Events>
+  <Event xmlns="http://schemas.microsoft.com/win/2004/08/events/event">
+    <System><Provider Name="Microsoft-Windows-Sysmon"/><EventID>1</EventID><TimeCreated SystemTime="2026-10-01T10:00:00.000000000Z"/><Computer>DESKTOP-DEMO</Computer></System>
+    <EventData>
+      <Data Name="UtcTime">2026-10-01 10:00:00.000</Data><Data Name="ProcessGuid">{11111111-0000-0000-0000-000000000001}</Data><Data Name="ProcessId">600</Data>
+      <Data Name="Image">C:\Windows\explorer.exe</Data><Data Name="CommandLine">C:\Windows\Explorer.EXE</Data><Data Name="User">DEMO\user</Data>
+      <Data Name="Hashes">SHA256=AAAA000000000000000000000000000000000000000000000000000000000001</Data>
+      <Data Name="ParentProcessGuid">{11111111-0000-0000-0000-000000000000}</Data><Data Name="ParentProcessId">500</Data><Data Name="ParentImage">C:\Windows\System32\userinit.exe</Data>
+    </EventData>
+  </Event>
+  <!-- out-of-order: this connection is listed BEFORE its process-create events but happened after them -->
+  <Event xmlns="http://schemas.microsoft.com/win/2004/08/events/event">
+    <System><Provider Name="Microsoft-Windows-Sysmon"/><EventID>3</EventID><TimeCreated SystemTime="2026-10-01T10:00:40.000000000Z"/><Computer>DESKTOP-DEMO</Computer></System>
+    <EventData>
+      <Data Name="UtcTime">2026-10-01 10:00:40.250</Data><Data Name="ProcessGuid">{11111111-0000-0000-0000-000000000003}</Data><Data Name="ProcessId">1010</Data>
+      <Data Name="Image">C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe</Data><Data Name="User">DEMO\user</Data><Data Name="Protocol">tcp</Data><Data Name="Initiated">true</Data>
+      <Data Name="SourceIp">192.168.1.20</Data><Data Name="SourcePort">51234</Data><Data Name="DestinationIp">104.20.30.50</Data><Data Name="DestinationPort">443</Data><Data Name="DestinationHostname">demo.example</Data>
+    </EventData>
+  </Event>
+  <Event xmlns="http://schemas.microsoft.com/win/2004/08/events/event">
+    <System><Provider Name="Microsoft-Windows-Sysmon"/><EventID>1</EventID><TimeCreated SystemTime="2026-10-01T10:00:10.000000000Z"/><Computer>DESKTOP-DEMO</Computer></System>
+    <EventData>
+      <Data Name="UtcTime">2026-10-01 10:00:10.100</Data><Data Name="ProcessGuid">{11111111-0000-0000-0000-000000000002}</Data><Data Name="ProcessId">1000</Data>
+      <Data Name="Image">C:\Program Files\Microsoft Office\root\Office16\WINWORD.EXE</Data><Data Name="CommandLine">"WINWORD.EXE" "C:\Users\demo\Documents\invoice_demo.docx"</Data><Data Name="User">DEMO\user</Data>
+      <Data Name="ParentProcessGuid">{11111111-0000-0000-0000-000000000001}</Data><Data Name="ParentProcessId">600</Data><Data Name="ParentImage">C:\Windows\explorer.exe</Data>
+    </EventData>
+  </Event>
+  <Event xmlns="http://schemas.microsoft.com/win/2004/08/events/event">
+    <System><Provider Name="Microsoft-Windows-Sysmon"/><EventID>1</EventID><TimeCreated SystemTime="2026-10-01T10:00:25.000000000Z"/><Computer>DESKTOP-DEMO</Computer></System>
+    <EventData>
+      <Data Name="UtcTime">2026-10-01 10:00:25.500</Data><Data Name="ProcessGuid">{11111111-0000-0000-0000-000000000003}</Data><Data Name="ProcessId">1010</Data>
+      <Data Name="Image">C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe</Data>
+      <Data Name="CommandLine">powershell.exe -NoProfile -Command "Get-Date; $x='https://demo.example/a?token=abc123secret'" --password=hunter2</Data><Data Name="User">DEMO\user</Data>
+      <Data Name="ParentProcessGuid">{11111111-0000-0000-0000-000000000002}</Data><Data Name="ParentProcessId">1000</Data><Data Name="ParentImage">C:\Program Files\Microsoft Office\root\Office16\WINWORD.EXE</Data>
+    </EventData>
+  </Event>
+  <Event xmlns="http://schemas.microsoft.com/win/2004/08/events/event">
+    <System><Provider Name="Microsoft-Windows-Sysmon"/><EventID>22</EventID><TimeCreated SystemTime="2026-10-01T10:00:39.000000000Z"/><Computer>DESKTOP-DEMO</Computer></System>
+    <EventData>
+      <Data Name="UtcTime">2026-10-01 10:00:39.000</Data><Data Name="ProcessGuid">{11111111-0000-0000-0000-000000000003}</Data><Data Name="ProcessId">1010</Data>
+      <Data Name="QueryName">demo.example</Data><Data Name="QueryResults">104.20.30.50;</Data><Data Name="Image">C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe</Data>
+    </EventData>
+  </Event>
+  <Event xmlns="http://schemas.microsoft.com/win/2004/08/events/event">
+    <System><Provider Name="Microsoft-Windows-Sysmon"/><EventID>11</EventID><TimeCreated SystemTime="2026-10-01T10:00:50.000000000Z"/><Computer>DESKTOP-DEMO</Computer></System>
+    <EventData>
+      <Data Name="UtcTime">2026-10-01 10:00:50.000</Data><Data Name="ProcessGuid">{11111111-0000-0000-0000-000000000003}</Data><Data Name="ProcessId">1010</Data>
+      <Data Name="Image">C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe</Data><Data Name="TargetFilename">C:\Users\Public\runner_sim.exe</Data>
+    </EventData>
+  </Event>
+  <Event xmlns="http://schemas.microsoft.com/win/2004/08/events/event">
+    <System><Provider Name="Microsoft-Windows-Sysmon"/><EventID>13</EventID><TimeCreated SystemTime="2026-10-01T10:00:55.000000000Z"/><Computer>DESKTOP-DEMO</Computer></System>
+    <EventData>
+      <Data Name="EventType">SetValue</Data><Data Name="UtcTime">2026-10-01 10:00:55.000</Data><Data Name="ProcessGuid">{11111111-0000-0000-0000-000000000003}</Data><Data Name="ProcessId">1010</Data>
+      <Data Name="Image">C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe</Data>
+      <Data Name="TargetObject">HKU\S-1-5-21-0-0-0-1000\Software\Microsoft\Windows\CurrentVersion\Run\DemoUpdater</Data><Data Name="Details">"C:\Users\Public\runner_sim.exe"</Data>
+    </EventData>
+  </Event>
+  <Event xmlns="http://schemas.microsoft.com/win/2004/08/events/event">
+    <System><Provider Name="Microsoft-Windows-Sysmon"/><EventID>7</EventID><TimeCreated SystemTime="2026-10-01T10:00:56.000000000Z"/><Computer>DESKTOP-DEMO</Computer></System>
+    <EventData><Data Name="UtcTime">2026-10-01 10:00:56.000</Data><Data Name="ImageLoaded">C:\Windows\System32\kernel32.dll</Data></EventData>
+  </Event>
+  <Event xmlns="http://schemas.microsoft.com/win/2004/08/events/event">
+    <System><Provider Name="Microsoft-Windows-Sysmon"/><EventID>1</EventID><TimeCreated SystemTime="2026-10-01T10:00:57.000000000Z"/><Computer>DESKTOP-DEMO</Computer></System>
+    <EventData><Data Name="UtcTime">2026-10-01 10:00:57.000</Data><Data Name="ProcessId">4242</Data></EventData>
+  </Event>
+  <Event xmlns="http://schemas.microsoft.com/win/2004/08/events/event">
+    <System><Provider Name="Microsoft-Windows-Sysmon"/><EventID>5</EventID><TimeCreated SystemTime="2026-10-01T10:01:30.000000000Z"/><Computer>DESKTOP-DEMO</Computer></System>
+    <EventData>
+      <Data Name="UtcTime">2026-10-01 10:01:30.000</Data><Data Name="ProcessGuid">{11111111-0000-0000-0000-000000000003}</Data><Data Name="ProcessId">1010</Data>
+      <Data Name="Image">C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe</Data>
+    </EventData>
+  </Event>
+</Events>

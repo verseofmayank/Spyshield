@@ -1,0 +1,9 @@
+# Local IOC watchlist. SpyShield never downloads indicators or sends endpoint data anywhere.
+# Edit by hand or from your own trusted source. Matches are investigation leads, not proof.
+source: "example local watchlist (synthetic placeholders; replace with your own trusted indicators)"
+updated: "2026-10-01"
+indicators:
+  - {type: sha256, value: "0000000000000000000000000000000000000000000000000000000000000001", note: "synthetic demo hash"}
+  - {type: ip, value: "203.0.113.66", note: "TEST-NET-3 documentation address used in demos"}
+  - {type: image_name, value: "demo-bad-tool.exe", note: "synthetic demo name"}
+  - {type: path, value: "*/programdata/demo-implant/*", note: "synthetic demo path"}

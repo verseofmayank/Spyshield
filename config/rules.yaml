@@ -1,0 +1,239 @@
+# SpyShield detection rules. Plain YAML, validated at load time (spyshield/core/config.py).
+# Rules describe *conditions worth an analyst's attention*, never verdicts of "malware".
+# Paths are matched case-insensitively with forward-slash normalisation and glob (*) patterns.
+
+settings:
+  poll_interval_seconds: 2.0      # >= 0.5 (bounded polling)
+  cooldown_seconds: 300           # identical alerts inside this window are merged (event time)
+  max_history_events: 20000       # bounded correlation history
+  hash_executables: false         # opt-in: SHA-256 of process images (size-limited)
+  hash_max_megabytes: 50
+  fim_max_file_megabytes: 50      # larger files are recorded by metadata only
+  fim_max_files: 20000
+  retention_max_events: 200000
+  retention_days: 30
+
+lists:
+  # Directories where ordinary software rarely *executes* from. Running from them is context, not proof:
+  # installers, updaters, portable apps and developer tools all do it. Downloads is deliberately NOT listed (very noisy).
+  suspicious_path_patterns:
+    - "*/appdata/local/temp/*"
+    - "*/windows/temp/*"
+    - "*/users/public/*"
+    - "*/$recycle.bin/*"
+    - "*/programdata/*/temp/*"
+    - "/tmp/*"
+    - "/var/tmp/*"
+    - "/dev/shm/*"
+  # Images matching these are never considered by execution-location rules (extend for your environment).
+  allowlist_image_patterns:
+    - "*/appdata/local/temp/chocolatey/*"
+    - "*/program files/*"
+    - "*/program files (x86)/*"
+    - "*/windows/system32/*"
+  # Process names (lowercase basename) that are ignored by the *rate* rule only.
+  allowlist_process_names: []
+
+rules:
+  - id: SHIELD-001
+    title: Process executed from a user-writable temporary location
+    description: >
+      A process image resides in a directory that is commonly used for staging (temp, public profile,
+      recycle bin). Many legitimate installers and updaters also run from these locations.
+    telemetry: [process, sysmon]
+    type: exec_location
+    severity: low
+    confidence: low
+    params:
+      executable_extensions: [".exe", ".scr", ".com", ".bat", ".cmd", ".ps1", ".vbs", ".js", ".jse", ".wsf", ".msi"]
+      escalate_if_parent_in: [winword.exe, excel.exe, powerpnt.exe, outlook.exe, acrord32.exe, acrobat.exe, mshta.exe, wscript.exe, cscript.exe]
+    mitre: []
+    limitations: Location alone is weak evidence; the alert states which extra condition (if any) raised severity.
+    false_positives:
+      - Software installers, self-updating applications, portable tools, developer build output.
+    action:
+      - Review the full image path, parent process and command line.
+      - Check whether the executable is signed and whether the hash is known (IOC watchlist, internal software inventory).
+      - Ask the user or owner whether they launched it.
+
+  - id: SHIELD-002
+    title: Unusual parent-child process relationship
+    description: >
+      A parent process launched a child that is uncommon for that parent (configurable pairs), such as an
+      office/document application starting a command interpreter.
+    telemetry: [process, sysmon]
+    type: parent_child
+    severity: medium
+    confidence: low
+    params:
+      pairs:
+        - parent: [winword.exe, excel.exe, powerpnt.exe, outlook.exe, acrord32.exe, acrobat.exe]
+          child: [powershell.exe, pwsh.exe, cmd.exe, wscript.exe, cscript.exe, mshta.exe, rundll32.exe, regsvr32.exe]
+        - parent: [wmiprvse.exe]
+          child: [powershell.exe, cmd.exe]
+    mitre: []
+    limitations: Macros, add-ins and enterprise automation legitimately do this; ancestry is only as complete as the telemetry.
+    false_positives:
+      - Office add-ins and macros used for business automation, PDF tools launching helper processes, IT management scripts.
+    action:
+      - Inspect the command line and the document or file involved.
+      - Look at what the child did next (network, file writes, further children).
+      - Confirm with the user whether a document or macro was opened.
+
+  - id: SHIELD-003
+    title: New or modified startup entry (Run/RunOnce/Startup folder)
+    description: >
+      A startup mechanism was added or changed compared with the stored baseline. Severity is raised when the
+      target is in a configured suspicious location.
+    telemetry: [persistence]
+    type: persistence_change
+    severity: low
+    confidence: medium
+    params:
+      changes: [added, modified]
+      escalate_if_target_in_suspicious_path: true
+    mitre:
+      - {id: T1547.001, name: "Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder"}
+    limitations: Software installs add startup entries routinely; the baseline must have been taken on a trusted state.
+    false_positives:
+      - New application installs, software updates, IT-deployed agents.
+    action:
+      - Verify the referenced file exists, its signature and hash.
+      - Compare with the software you installed recently.
+      - Do not delete the entry until the owner confirms; SpyShield never modifies startup locations.
+
+  - id: SHIELD-004
+    title: Recently started process from a suspicious location made an outbound connection
+    description: >
+      A process whose image is in a configured suspicious location and which started shortly before was observed
+      with an outbound connection to an external address.
+    telemetry: [process, network]
+    type: proc_net_correlation
+    severity: medium
+    confidence: medium
+    params:
+      window_seconds: 300
+      public_only: true
+    mitre: []
+    limitations: Polling can miss short-lived processes/connections; the connection may be a legitimate download or update check.
+    false_positives:
+      - Installers or updaters downloading components, portable apps checking for updates.
+    action:
+      - Identify the remote address and whether it belongs to a known vendor.
+      - Review the process lineage and command line.
+      - Check IOC watchlist results and file hash reputation with your internal tools.
+
+  - id: SHIELD-005
+    title: Monitored file changed from baseline
+    description: A file in an explicitly monitored directory was created, modified or deleted compared with the FIM baseline.
+    telemetry: [fim]
+    type: fim_change
+    severity: medium
+    confidence: high
+    params:
+      default_severity: low
+      changes: [modified, created, deleted]
+      path_severity:
+        - {prefix: "*/system32/drivers/etc/*", severity: high}
+        - {prefix: "*/etc/*", severity: medium}
+        - {prefix: "*/.ssh/*", severity: high}
+    limitations: A change is a fact, not a verdict. SpyShield cannot tell who changed the file or why (use OS auditing for attribution).
+    false_positives:
+      - Normal edits, application updates, log rotation, editors' temporary files.
+    action:
+      - Confirm with the file owner whether the change was expected.
+      - Compare content with a trusted copy or version control.
+      - Review what else happened around the same time (alerts timeline).
+
+  - id: SHIELD-006
+    title: High outbound connection activity from one process
+    description: >
+      One process contacted many distinct external destinations, or opened many new connections, within a time window.
+    telemetry: [network]
+    type: outbound_rate
+    severity: low
+    confidence: low
+    params:
+      window_seconds: 60
+      max_distinct_destinations: 25
+      max_new_connections: 60
+      public_only: true
+      ignore_processes: []
+      # Path-based (not name-based) exclusions for software that is expected to talk to many hosts.
+      ignore_image_patterns:
+        - "*/program files/google/chrome/*"
+        - "*/program files (x86)/google/chrome/*"
+        - "*/program files (x86)/microsoft/edge/*"
+        - "*/program files/mozilla firefox/*"
+    mitre: []
+    limitations: Browsers, sync clients, torrent and update software legitimately exceed any threshold; this is not evidence of command-and-control.
+    false_positives:
+      - Web browsers, cloud-sync clients, package managers, peer-to-peer software, security scanners.
+    action:
+      - Identify the process and whether such volume is expected.
+      - Review destinations for patterns (single service vs. many unrelated hosts).
+      - Add the process to allowlist_process_names if it is a known, approved application.
+
+  - id: SHIELD-007
+    title: Sysmon process chain with subsequent network activity
+    description: >
+      Using Sysmon ProcessGuid correlation, a process matching an analyst-defined chain made a network connection
+      within the window after it was created.
+    telemetry: [sysmon]
+    type: sysmon_chain
+    severity: medium
+    confidence: medium
+    params:
+      window_seconds: 300
+      chains:
+        - name: "Interpreter launched by an office application that then connects out"
+          parent_regex: "(?i)(winword|excel|powerpnt|outlook)\\.exe$"
+          image_regex: "(?i)(powershell|pwsh|cmd|wscript|cscript|mshta)\\.exe$"
+          require_public_connection: true
+        - name: "Executable from a suspicious location that then connects out"
+          require_suspicious_path: true
+          require_public_connection: true
+    mitre: []
+    limitations: Only as complete as the Sysmon configuration (events 1 and 3 must be enabled).
+    false_positives:
+      - Legitimate automation using script interpreters; installers fetching components.
+    action:
+      - Pull the full Sysmon history for the ProcessGuid (children, file and registry events).
+      - Review the remote destination and command line.
+      - Escalate per your incident process if the behaviour is not explained.
+
+  - id: SHIELD-008
+    title: New startup entry followed by execution of the referenced file
+    description: >
+      A startup entry was added/modified and a process was later started from the path it references. This is a
+      stronger observation than the registry change on its own.
+    telemetry: [persistence, process]
+    type: persistence_exec
+    severity: medium
+    confidence: medium
+    params:
+      window_seconds: 86400
+    mitre:
+      - {id: T1547.001, name: "Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder"}
+    limitations: The mapping to T1547.001 reflects the persistence mechanism observed, not intent. Installers also create and run entries.
+    false_positives:
+      - An application installing itself and launching immediately.
+    action:
+      - Review the installing process and the full lineage of the executed process.
+      - Verify signature/hash of the referenced file.
+      - Confirm with the owner whether an installation occurred.
+
+  - id: SHIELD-009
+    title: Local IOC watchlist match
+    description: An observed hash, remote IP, file path or process image name exactly matches a local watchlist indicator.
+    telemetry: [watchlist, process, network, fim]
+    type: ioc_match
+    severity: medium
+    confidence: medium
+    mitre: []
+    limitations: An IOC match is an investigation lead, not proof of compromise. Watchlist quality and age determine its value.
+    false_positives:
+      - Stale or overly broad indicators (shared IPs, reused file names); research or security-tool activity.
+    action:
+      - Check the indicator's source and last-updated date in the watchlist.
+      - Examine the surrounding process/network evidence before concluding anything.

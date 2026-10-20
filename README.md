@@ -85,8 +85,8 @@ hand-written fixtures designed with the rules, **not a production detection rate
 * SpyShield cannot reliably detect keyloggers: user-mode polling cannot see keyboard hooks, and names/ports prove nothing.
 * File integrity shows *that* a file changed, not who changed it or why.
 * Rules are heuristics with listed false positives; thresholds need tuning per environment.
-* Linux support is partial. Live Sysmon reading is UNVERIFIED on this machine (Sysmon not installed). See [docs/PLATFORM_SUPPORT.md](docs/PLATFORM_SUPPORT.md).
-* The Linux CI job is configured but was not run locally.
+* Linux support is partial. Live Sysmon reading is UNVERIFIED (Sysmon not installed here). See [docs/PLATFORM_SUPPORT.md](docs/PLATFORM_SUPPORT.md).
+* The test suite also passes on Linux (Ubuntu 24.04 under WSL, Python 3.12.3): 163 passed, 1 skipped. Live Linux collection beyond the tests (autostart/systemd on a real desktop) was not exercised.
 
 ## Responsible use
 Run SpyShield only on systems you own or are explicitly authorised to monitor. It collects process command lines

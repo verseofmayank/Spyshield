@@ -13,7 +13,7 @@ Registry, `tmp_path` directories, hand-written Sysmon XML and synthetic events. 
 ```
 The one skip is `test_symlinks_are_not_followed_and_loops_are_safe`: Windows without Developer Mode/administrator refuses to create
 symlinks, so the test skips itself. The same code path is exercised by `test_symlink_branch_without_needing_symlink_privileges`
-(stand-in directory entry). The Linux CI job is configured in `.github/workflows/tests.yml` but **was not run locally (UNVERIFIED)**.
+(stand-in directory entry). The same suite was run on Linux (Ubuntu 24.04 under WSL, Python 3.12.3): all pass, same single skip. GitHub Actions (`.github/workflows/tests.yml`) runs it on Windows and Ubuntu; its first Ubuntu run failed because one CLI test asserted on text that Rich wrapped differently with a longer temp path; the test now fixes the terminal width (`COLUMNS=250`).
 
 ## What is covered
 | File | Areas |

@@ -93,6 +93,7 @@ def test_report_has_limitations_and_no_verdict_language():
 @pytest.fixture
 def runner(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
+    monkeypatch.setenv("COLUMNS", "250")  # Rich wraps long messages (e.g. temp paths) at the terminal width; keep assertions stable on every OS
     return CliRunner()
 
 

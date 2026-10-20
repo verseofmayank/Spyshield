@@ -21,7 +21,7 @@ Legend: [x] done and tested | [~] done with stated limits | [ ] not done
 - [x] JSON / CSV / standalone HTML reports
 
 ## P2 / pending
-- [~] Linux support is partial (autostart + systemd user units); not run on Linux here; CI job configured but not run
+- [~] Linux support is partial (autostart + systemd user units); test suite passes on Ubuntu 24.04 (WSL), real-desktop autostart/systemd not exercised
 - [ ] `.lnk` shortcut target resolution for Startup-folder entries
 - [ ] Scheduled tasks / services / WMI persistence
 - [ ] ETW-based telemetry; DNS-based correlation from Sysmon event 22

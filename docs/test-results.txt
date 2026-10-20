@@ -1,0 +1,14 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.7.0
+rootdir: C:\Users\Mayank\spyshield
+configfile: pytest.ini
+testpaths: tests
+collected 164 items
+
+tests\test_collectors.py ............................................... [ 28%]
+.....s...................                                                [ 43%]
+tests\test_detection.py ................................................ [ 73%]
+..................                                                       [ 84%]
+tests\test_reports_cli.py ..........................                     [100%]
+
+======================= 163 passed, 1 skipped in 25.22s =======================

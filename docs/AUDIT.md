@@ -41,3 +41,6 @@ process-name keyword scan and a "non-80/443 port" network scan, each followed by
 | `CRITICAL_PROCESSES` | removed (nothing is killed, so there is nothing to protect) |
 | free-text log | normalised UTC events + SQLite + JSON/CSV/HTML reports |
 | `main.py` | replaced by `spyshield.py` + package (history preserved in Git) |
+
+## Removed files
+`main.py` (replaced by the package; contained the kill prompts) and `detection_sample.log` (an example of the old, false-positive-heavy output; superseded by `examples/demo-output/`). Both remain in Git history.

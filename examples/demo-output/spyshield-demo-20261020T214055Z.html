@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'">
+<title>SpyShield investigation report</title>
+<style>
+:root{--bg:#f4f6f9;--card:#fff;--text:#1c2430;--muted:#5d6877;--line:#d8dee7;--accent:#0b6e99;--high:#c62828;--medium:#d9730d;--low:#a67c00;--info:#3b6fb6}
+@media (prefers-color-scheme:dark){:root{--bg:#0f141b;--card:#171e28;--text:#e4e9f0;--muted:#98a3b3;--line:#2a3544;--accent:#4fc3e8;--high:#ff6b6b;--medium:#ffa14a;--low:#e6c15a;--info:#7fb0f0}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px 48px}
+header{background:var(--card);border-bottom:1px solid var(--line);padding:22px 0;margin-bottom:18px}
+.brand{font-weight:700;letter-spacing:.18em;color:var(--accent);font-size:13px}
+h1{margin:4px 0;font-size:25px}h2{font-size:18px;margin:30px 0 10px;border-bottom:1px solid var(--line);padding-bottom:6px}
+.muted{color:var(--muted)}.mono{font-family:ui-monospace,Consolas,monospace;font-size:12.5px;word-break:break-all}
+.banner{border:2px dashed var(--medium);background:var(--card);padding:12px 16px;border-radius:8px;margin-bottom:16px;font-weight:600}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin:12px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 12px}.card b{display:block;font-size:24px}.card span{color:var(--muted);font-size:12px;text-transform:uppercase}
+.tag{display:inline-block;padding:1px 8px;border-radius:999px;font-size:12px;font-weight:600;border:1px solid currentColor}
+.sev-high{color:var(--high)}.sev-medium{color:var(--medium)}.sev-low{color:var(--low)}.sev-info{color:var(--info)}
+.table-wrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:13.5px}th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}th{white-space:nowrap}
+details.alert{background:var(--card);border:1px solid var(--line);border-left:5px solid currentColor;border-radius:8px;margin:10px 0}
+details.alert>summary{cursor:pointer;padding:10px 14px;font-weight:600;color:var(--text)}
+.body{padding:0 14px 12px;color:var(--text)}dl{display:grid;grid-template-columns:150px 1fr;gap:4px 12px;margin:8px 0}dt{color:var(--muted)}dd{margin:0;word-break:break-word}
+.note{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 14px;color:var(--muted)}
+ul{margin:4px 0;padding-left:20px}footer{margin-top:36px;color:var(--muted);font-size:12.5px}
+@media (max-width:560px){dl{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<div class="brand">SPYSHIELD &middot; HOST-BASED DETECTION</div>
+<h1>SpyShield demo investigation (SYNTHETIC DATA)</h1>
+<div class="muted">Generated 2026-10-20T21:40:55Z &middot; window 2026-10-01T10:00:00Z to 2026-10-01T10:05:00Z (UTC) &middot; host(s): DEMO-HOST, host-826c71b10f</div>
+<div class="muted">System: Windows 11 (AMD64), Python 3.13.7 &middot; SpyShield 1.0.0 by Mayank Kumar Karn</div>
+</div></header>
+<main class="wrap">
+<div class="banner">SYNTHETIC DATA &mdash; produced by the offline demonstration from labelled fixtures. It is NOT a record of real endpoint activity.</div><div class="cards">
+<div class="card"><b>159</b><span>events analyzed</span></div>
+<div class="card"><b>14</b><span>alerts</span></div>
+<div class="card"><b class="sev-high">1</b><span>high</span></div><div class="card"><b class="sev-medium">8</b><span>medium</span></div><div class="card"><b class="sev-low">5</b><span>low</span></div><div class="card"><b class="sev-info">0</b><span>info</span></div></div>
+<div class="note">Alerts are <strong>observations that require analyst review</strong>, not verdicts of malware. Severity and confidence come from stated rule conditions; there is no opaque risk score.</div>
+
+<h2>Alerts</h2>
+<details class="alert sev-high" open>
+<summary><span class="tag sev-high">HIGH</span> <span class="mono">SHIELD-008</span> New startup entry followed by execution of the referenced file</summary>
+<div class="body"><dl>
+<dt>Observation</dt><dd>Startup entry &#39;UpdaterDemo&#39; was added and &#39;runner_sim.exe&#39; then ran from C:\Users\Public\runner_sim.exe</dd>
+<dt>Time (UTC) / host</dt><dd>2026-10-01T10:05:00Z &middot; DEMO-HOST</dd>
+<dt>Process</dt><dd class="mono">runner_sim.exe (PID 1100) C:\Users\Public\runner_sim.exe<br>parent: C:\Windows\explorer.exe</dd><dt>Conditions met</dt><dd><ul><li>startup entry &#39;UpdaterDemo&#39; added at HKCU\Software\Microsoft\Windows\CurrentVersion\Run</li><li>process started from the referenced path 280s later</li><li>referenced path is in a configured suspicious location</li></ul></dd>
+<dt>Evidence</dt><dd><ul><li class="mono">{&#34;ts&#34;: &#34;2026-10-01T10:00:20Z&#34;, &#34;source&#34;: &#34;persistence&#34;, &#34;kind&#34;: &#34;persistence_change&#34;, &#34;pid&#34;: null, &#34;image&#34;: null, &#34;change&#34;: &#34;added&#34;, &#34;location&#34;: &#34;HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run&#34;, &#34;entry_name&#34;: &#34;UpdaterDemo&#34;, &#34;target_path&#34;: &#34;C:\\Users\\Public\\runner_sim.exe&#34;}</li><li class="mono">{&#34;ts&#34;: &#34;2026-10-01T10:05:00Z&#34;, &#34;source&#34;: &#34;synthetic&#34;, &#34;kind&#34;: &#34;process_start&#34;, &#34;pid&#34;: 1100, &#34;image&#34;: &#34;C:\\Users\\Public\\runner_sim.exe&#34;}</li></ul></dd>
+<dt>Confidence</dt><dd>medium &mdash; The mapping to T1547.001 reflects the persistence mechanism observed, not intent. Installers also create and run entries.</dd>
+<dt>MITRE ATT&amp;CK</dt><dd>T1547.001 Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder</dd><dt>Possible false positives</dt><dd><ul><li>An application installing itself and launching immediately.</li></ul></dd>
+<dt>Investigation steps</dt><dd><ul><li>Review the installing process and the full lineage of the executed process.</li><li>Verify signature/hash of the referenced file.</li><li>Confirm with the owner whether an installation occurred.</li></ul></dd>
+<dt>Status</dt><dd>requires analyst review &middot; ID A-e4185f21f920</dd>
+</dl></div>
+</details>
+<details class="alert sev-medium" open>
+<summary><span class="tag sev-medium">MEDIUM</span> <span class="mono">SHIELD-003</span> New or modified startup entry (Run/RunOnce/Startup folder)</summary>
+<div class="body"><dl>
+<dt>Observation</dt><dd>Startup entry &#39;SystemHelperDemo&#39; added at HKCU\Software\Microsoft\Windows\CurrentVersion\Run: &#34;C:\Users\Public\helper_sim.exe&#34; --silent</dd>
+<dt>Time (UTC) / host</dt><dd>2026-10-01T10:00:20Z &middot; DEMO-HOST</dd>
+<dt>Conditions met</dt><dd><ul><li>entry added compared with the stored baseline</li><li>referenced path is in a configured suspicious location: C:\Users\Public\helper_sim.exe</li></ul></dd>
+<dt>Evidence</dt><dd><ul><li class="mono">{&#34;ts&#34;: &#34;2026-10-01T10:00:20Z&#34;, &#34;source&#34;: &#34;persistence&#34;, &#34;kind&#34;: &#34;persistence_change&#34;, &#34;pid&#34;: null, &#34;image&#34;: null, &#34;change&#34;: &#34;added&#34;, &#34;location&#34;: &#34;HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run&#34;, &#34;entry_name&#34;: &#34;SystemHelperDemo&#34;, &#34;target_path&#34;: &#34;C:\\Users\\Public\\helper_sim.exe&#34;}</li></ul></dd>
+<dt>Confidence</dt><dd>medium &mdash; Software installs add startup entries routinely; the baseline must have been taken on a trusted state.</dd>
+<dt>MITRE ATT&amp;CK</dt><dd>T1547.001 Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder</dd><dt>Possible false positives</dt><dd><ul><li>New application installs, software updates, IT-deployed agents.</li></ul></dd>
+<dt>Investigation steps</dt><dd><ul><li>Verify the referenced file exists, its signature and hash.</li><li>Compare with the software you installed recently.</li><li>Do not delete the entry until the owner confirms; SpyShield never modifies startup locations.</li></ul></dd>
+<dt>Status</dt><dd>requires analyst review &middot; ID A-7557ee4f5a85</dd>
+</dl></div>
+</details>
+<details class="alert sev-medium" open>
+<summary><span class="tag sev-medium">MEDIUM</span> <span class="mono">SHIELD-003</span> New or modified startup entry (Run/RunOnce/Startup folder)</summary>
+<div class="body"><dl>
+<dt>Observation</dt><dd>Startup entry &#39;UpdaterDemo&#39; added at HKCU\Software\Microsoft\Windows\CurrentVersion\Run: &#34;C:\Users\Public\runner_sim.exe&#34;</dd>
+<dt>Time (UTC) / host</dt><dd>2026-10-01T10:00:20Z &middot; DEMO-HOST</dd>
+<dt>Conditions met</dt><dd><ul><li>entry added compared with the stored baseline</li><li>referenced path is in a configured suspicious location: C:\Users\Public\runner_sim.exe</li></ul></dd>
+<dt>Evidence</dt><dd><ul><li class="mono">{&#34;ts&#34;: &#34;2026-10-01T10:00:20Z&#34;, &#34;source&#34;: &#34;persistence&#34;, &#34;kind&#34;: &#34;persistence_change&#34;, &#34;pid&#34;: null, &#34;image&#34;: null, &#34;change&#34;: &#34;added&#34;, &#34;location&#34;: &#34;HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run&#34;, &#34;entry_name&#34;: &#34;UpdaterDemo&#34;, &#34;target_path&#34;: &#34;C:\\Users\\Public\\runner_sim.exe&#34;}</li></ul></dd>
+<dt>Confidence</dt><dd>medium &mdash; Software installs add startup entries routinely; the baseline must have been taken on a trusted state.</dd>
+<dt>MITRE ATT&amp;CK</dt><dd>T1547.001 Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder</dd><dt>Possible false positives</dt><dd><ul><li>New application installs, software updates, IT-deployed agents.</li></ul></dd>
+<dt>Investigation steps</dt><dd><ul><li>Verify the referenced file exists, its signature and hash.</li><li>Compare with the software you installed recently.</li><li>Do not delete the entry until the owner confirms; SpyShield never modifies startup locations.</li></ul></dd>
+<dt>Status</dt><dd>requires analyst review &middot; ID A-1ec3f0ad39d8</dd>
+</dl></div>
+</details>
+<details class="alert sev-medium" open>
+<summary><span class="tag sev-medium">MEDIUM</span> <span class="mono">SHIELD-002</span> Unusual parent-child process relationship</summary>
+<div class="body"><dl>
+<dt>Observation</dt><dd>&#39;winword.exe&#39; launched &#39;powershell.exe&#39; (configured unusual parent-child pair)</dd>
+<dt>Time (UTC) / host</dt><dd>2026-10-01T10:00:25Z &middot; DEMO-HOST</dd>
+<dt>Process</dt><dd class="mono">powershell.exe (PID 1010) C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe<br>cmd: powershell.exe -NoProfile -Command Get-Date<br>parent: C:\Program Files\Microsoft Office\root\Office16\WINWORD.EXE</dd><dt>Conditions met</dt><dd><ul><li>parent &#39;winword.exe&#39; is in configured parent list</li><li>child &#39;powershell.exe&#39; is in configured child list</li><li>lineage: explorer.exe -&gt; winword.exe -&gt; powershell.exe</li></ul></dd>
+<dt>Evidence</dt><dd><ul><li class="mono">{&#34;ts&#34;: &#34;2026-10-01T10:00:10Z&#34;, &#34;source&#34;: &#34;synthetic&#34;, &#34;kind&#34;: &#34;process_start&#34;, &#34;pid&#34;: 1000, &#34;image&#34;: &#34;C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE&#34;}</li><li class="mono">{&#34;ts&#34;: &#34;2026-10-01T10:00:25Z&#34;, &#34;source&#34;: &#34;synthetic&#34;, &#34;kind&#34;: &#34;process_start&#34;, &#34;pid&#34;: 1010, &#34;image&#34;: &#34;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe&#34;}</li></ul></dd>
+<dt>Confidence</dt><dd>low &mdash; Macros, add-ins and enterprise automation legitimately do this; ancestry is only as complete as the telemetry.</dd>
+<dt>Possible false positives</dt><dd><ul><li>Office add-ins and macros used for business automation, PDF tools launching helper processes, IT management scripts.</li></ul></dd>
+<dt>Investigation steps</dt><dd><ul><li>Inspect the command line and the document or file involved.</li><li>Look at what the child did next (network, file writes, further children).</li><li>Confirm with the user whether a document or macro was opened.</li></ul></dd>
+<dt>Status</dt><dd>requires analyst review &middot; ID A-019931a918a2</dd>
+</dl></div>
+</details>
+<details class="alert sev-medium" open>
+<summary><span class="tag sev-medium">MEDIUM</span> <span class="mono">SHIELD-002</span> Unusual parent-child process relationship</summary>
+<div class="body"><dl>
+<dt>Observation</dt><dd>&#39;winword.exe&#39; launched &#39;powershell.exe&#39; (configured unusual parent-child pair)</dd>
+<dt>Time (UTC) / host</dt><dd>2026-10-01T10:00:25.500000Z &middot; DEMO-HOST</dd>
+<dt>Process</dt><dd class="mono">powershell.exe (PID 1010) C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe<br>cmd: powershell.exe -NoProfile -Command &#34;Get-Date; $x=&#39;https://demo.example/a?token=[REDACTED]&#39;&#34; --password=[REDACTED]<br>parent: C:\Program Files\Microsoft Office\root\Office16\WINWORD.EXE</dd><dt>Conditions met</dt><dd><ul><li>parent &#39;winword.exe&#39; is in configured parent list</li><li>child &#39;powershell.exe&#39; is in configured child list</li><li>lineage: explorer.exe -&gt; winword.exe -&gt; powershell.exe</li></ul></dd>
+<dt>Evidence</dt><dd><ul><li class="mono">{&#34;ts&#34;: &#34;2026-10-01T10:00:10.100000Z&#34;, &#34;source&#34;: &#34;sysmon&#34;, &#34;kind&#34;: &#34;process_start&#34;, &#34;pid&#34;: 1000, &#34;image&#34;: &#34;C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE&#34;}</li><li class="mono">{&#34;ts&#34;: &#34;2026-10-01T10:00:25.500000Z&#34;, &#34;source&#34;: &#34;sysmon&#34;, &#34;kind&#34;: &#34;process_start&#34;, &#34;pid&#34;: 1010, &#34;image&#34;: &#34;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe&#34;}</li></ul></dd>
+<dt>Confidence</dt><dd>low &mdash; Macros, add-ins and enterprise automation legitimately do this; ancestry is only as complete as the telemetry.</dd>
+<dt>Possible false positives</dt><dd><ul><li>Office add-ins and macros used for business automation, PDF tools launching helper processes, IT management scripts.</li></ul></dd>
+<dt>Investigation steps</dt><dd><ul><li>Inspect the command line and the document or file involved.</li><li>Look at what the child did next (network, file writes, further children).</li><li>Confirm with the user whether a document or macro was opened.</li></ul></dd>
+<dt>Status</dt><dd>requires analyst review &middot; ID A-1173e56ddb00</dd>
+</dl></div>
+</details>
+<details class="alert sev-medium" open>
+<summary><span class="tag sev-medium">MEDIUM</span> <span class="mono">SHIELD-009</span> Local IOC watchlist match</summary>
+<div class="body"><dl>
+<dt>Observation</dt><dd>Exact watchlist match (sha256) &#39;0000000000000000000000000000000000000000000000000000000000000001&#39;: an investigation lead, not proof of compromise</dd>
+<dt>Time (UTC) / host</dt><dd>2026-10-01T10:00:40Z &middot; DEMO-HOST</dd>
+<dt>Process</dt><dd class="mono">demoapp.exe (PID 810) C:\Program Files\DemoApp\demoapp.exe<br>parent: C:\Windows\explorer.exe</dd><dt>Conditions met</dt><dd><ul><li>exact match against local watchlist (sha256)</li><li>watchlist source: example local watchlist (synthetic placeholders; replace with your own trusted indicators), updated 2026-10-01, note: synthetic demo hash</li></ul></dd>
+<dt>Evidence</dt><dd><ul><li class="mono">{&#34;ts&#34;: &#34;2026-10-01T10:00:40Z&#34;, &#34;source&#34;: &#34;synthetic&#34;, &#34;kind&#34;: &#34;process_start&#34;, &#34;pid&#34;: 810, &#34;image&#34;: &#34;C:\\Program Files\\DemoApp\\demoapp.exe&#34;, &#34;sha256&#34;: &#34;0000000000000000000000000000000000000000000000000000000000000001&#34;}</li></ul></dd>
+<dt>Confidence</dt><dd>medium &mdash; An IOC match is an investigation lead, not proof of compromise. Watchlist quality and age determine its value.</dd>
+<dt>Possible false positives</dt><dd><ul><li>Stale or overly broad indicators (shared IPs, reused file names); research or security-tool activity.</li></ul></dd>
+<dt>Investigation steps</dt><dd><ul><li>Check the indicator&#39;s source and last-updated date in the watchlist.</li><li>Examine the surrounding process/network evidence before concluding anything.</li></ul></dd>
+<dt>Status</dt><dd>requires analyst review &middot; ID A-5bad94853fff</dd>
+</dl></div>
+</details>
+<details class="alert sev-medium" open>
+<summary><span class="tag sev-medium">MEDIUM</span> <span class="mono">SHIELD-007</span> Sysmon process chain with subsequent network activity</summary>
+<div class="body"><dl>
+<dt>Observation</dt><dd>Sysmon chain &#39;Interpreter launched by an office application that then connects out&#39;: winword.exe -&gt; powershell.exe -&gt; 104.20.30.50:443</dd>
+<dt>Time (UTC) / host</dt><dd>2026-10-01T10:00:40.250000Z &middot; DEMO-HOST</dd>
+<dt>Process</dt><dd class="mono">powershell.exe (PID 1010) C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe<br>cmd: powershell.exe -NoProfile -Command &#34;Get-Date; $x=&#39;https://demo.example/a?token=[REDACTED]&#39;&#34; --password=[REDACTED]<br>parent: C:\Program Files\Microsoft Office\root\Office16\WINWORD.EXE</dd><dt>Conditions met</dt><dd><ul><li>image matches /(?i)(powershell|pwsh|cmd|wscript|cscript|mshta)\.exe$/</li><li>parent image matches /(?i)(winword|excel|powerpnt|outlook)\.exe$/</li><li>connection to a public address</li><li>same ProcessGuid {11111111-0000-0000-0000-000000000003}; connection 14s after process creation (window 300s)</li></ul></dd>
+<dt>Evidence</dt><dd><ul><li class="mono">{&#34;ts&#34;: &#34;2026-10-01T10:00:10.100000Z&#34;, &#34;source&#34;: &#34;sysmon&#34;, &#34;kind&#34;: &#34;process_start&#34;, &#34;pid&#34;: 1000, &#34;image&#34;: &#34;C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE&#34;}</li><li class="mono">{&#34;ts&#34;: &#34;2026-10-01T10:00:25.500000Z&#34;, &#34;source&#34;: &#34;sysmon&#34;, &#34;kind&#34;: &#34;process_start&#34;, &#34;pid&#34;: 1010, &#34;image&#34;: &#34;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe&#34;}</li><li class="mono">{&#34;ts&#34;: &#34;2026-10-01T10:00:40.250000Z&#34;, &#34;source&#34;: &#34;sysmon&#34;, &#34;kind&#34;: &#34;network_connection&#34;, &#34;pid&#34;: 1010, &#34;image&#34;: &#34;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe&#34;, &#34;remote_ip&#34;: &#34;104.20.30.50&#34;, &#34;remote_port&#34;: 443, &#34;state&#34;: &#34;CONNECT&#34;, &#34;protocol&#34;: &#34;tcp&#34;}</li></ul></dd>
+<dt>Confidence</dt><dd>medium &mdash; Only as complete as the Sysmon configuration (events 1 and 3 must be enabled).</dd>
+<dt>Possible false positives</dt><dd><ul><li>Legitimate automation using script interpreters; installers fetching components.</li></ul></dd>
+<dt>Investigation steps</dt><dd><ul><li>Pull the full Sysmon history for the ProcessGuid (children, file and registry events).</li><li>Review the remote destination and command line.</li><li>Escalate per your incident process if the behaviour is not explained.</li></ul></dd>
+<dt>Status</dt><dd>requires analyst review &middot; ID A-da7d17d03243</dd>
+</dl></div>
+</details>
+<details class="alert sev-medium" open>
+<summary><span class="tag sev-medium">MEDIUM</span> <span class="mono">SHIELD-003</span> New or modified startup entry (Run/RunOnce/Startup folder)</summary>
+<div class="body"><dl>
+<dt>Observation</dt><dd>Startup entry &#39;DemoUpdater&#39; modified at sysmon-registry: &#34;C:\Users\Public\runner_sim.exe&#34;</dd>
+<dt>Time (UTC) / host</dt><dd>2026-10-01T10:00:55Z &middot; DEMO-HOST</dd>
+<dt>Process</dt><dd class="mono">powershell.exe (PID 1010) C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe</dd><dt>Conditions met</dt><dd><ul><li>Sysmon registry event (SetValue)</li><li>referenced path is in a configured suspicious location: C:\Users\Public\runner_sim.exe</li></ul></dd>
+<dt>Evidence</dt><dd><ul><li class="mono">{&#34;ts&#34;: &#34;2026-10-01T10:00:55Z&#34;, &#34;source&#34;: &#34;sysmon&#34;, &#34;kind&#34;: &#34;persistence_change&#34;, &#34;pid&#34;: 1010, &#34;image&#34;: &#34;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe&#34;, &#34;change&#34;: &#34;modified&#34;, &#34;location&#34;: &#34;sysmon-registry&#34;, &#34;entry_name&#34;: &#34;DemoUpdater&#34;, &#34;target_path&#34;: &#34;C:\\Users\\Public\\runner_sim.exe&#34;, &#34;registry_key&#34;: &#34;HKU\\S-1-5-21-0-0-0-1000\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\DemoUpdater&#34;}</li></ul></dd>
+<dt>Confidence</dt><dd>medium &mdash; Software installs add startup entries routinely; the baseline must have been taken on a trusted state.</dd>
+<dt>MITRE ATT&amp;CK</dt><dd>T1547.001 Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder</dd><dt>Possible false positives</dt><dd><ul><li>New application installs, software updates, IT-deployed agents.</li></ul></dd>
+<dt>Investigation steps</dt><dd><ul><li>Verify the referenced file exists, its signature and hash.</li><li>Compare with the software you installed recently.</li><li>Do not delete the entry until the owner confirms; SpyShield never modifies startup locations.</li></ul></dd>
+<dt>Status</dt><dd>requires analyst review &middot; ID A-53065784cc95</dd>
+</dl></div>
+</details>
+<details class="alert sev-medium" open>
+<summary><span class="tag sev-medium">MEDIUM</span> <span class="mono">SHIELD-004</span> Recently started process from a suspicious location made an outbound connection</summary>
+<div class="body"><dl>
+<dt>Observation</dt><dd>&#39;fetcher_sim.exe&#39; started from a suspicious location and 45s later connected to 104.20.30.50:8443</dd>
+<dt>Time (UTC) / host</dt><dd>2026-10-01T10:01:15Z &middot; DEMO-HOST</dd>
+<dt>Process</dt><dd class="mono">fetcher_sim.exe (PID 800) C:\Users\demo\AppData\Local\Temp\vestige_demo\fetcher_sim.exe<br>parent: C:\Windows\explorer.exe</dd><dt>Conditions met</dt><dd><ul><li>image path matches configured suspicious location &#39;*/appdata/local/temp/*&#39;</li><li>process was created 45s before the connection (window 300s)</li><li>outbound connection to public address</li></ul></dd>
+<dt>Evidence</dt><dd><ul><li class="mono">{&#34;ts&#34;: &#34;2026-10-01T10:00:30Z&#34;, &#34;source&#34;: &#34;synthetic&#34;, &#34;kind&#34;: &#34;process_start&#34;, &#34;pid&#34;: 800, &#34;image&#34;: &#34;C:\\Users\\demo\\AppData\\Local\\Temp\\vestige_demo\\fetcher_sim.exe&#34;}</li><li class="mono">{&#34;ts&#34;: &#34;2026-10-01T10:01:15Z&#34;, &#34;source&#34;: &#34;synthetic&#34;, &#34;kind&#34;: &#34;network_connection&#34;, &#34;pid&#34;: 800, &#34;image&#34;: &#34;C:\\Users\\demo\\AppData\\Local\\Temp\\vestige_demo\\fetcher_sim.exe&#34;, &#34;remote_ip&#34;: &#34;104.20.30.50&#34;, &#34;remote_port&#34;: 8443, &#34;state&#34;: &#34;ESTABLISHED&#34;, &#34;protocol&#34;: &#34;tcp&#34;}</li></ul></dd>
+<dt>Confidence</dt><dd>medium &mdash; Polling can miss short-lived processes/connections; the connection may be a legitimate download or update check.</dd>
+<dt>Possible false positives</dt><dd><ul><li>Installers or updaters downloading components, portable apps checking for updates.</li></ul></dd>
+<dt>Investigation steps</dt><dd><ul><li>Identify the remote address and whether it belongs to a known vendor.</li><li>Review the process lineage and command line.</li><li>Check IOC watchlist results and file hash reputation with your internal tools.</li></ul></dd>
+<dt>Status</dt><dd>requires analyst review &middot; ID A-8ae3779982fc</dd>
+</dl></div>
+</details>
+<details class="alert sev-low" >
+<summary><span class="tag sev-low">LOW</span> <span class="mono">SHIELD-001</span> Process executed from a user-writable temporary location</summary>
+<div class="body"><dl>
+<dt>Observation</dt><dd>Process &#39;updater_sim.exe&#39; started from a configured temporary/user-writable location: C:\Users\demo\AppData\Local\Temp\vestige_demo\updater_sim.exe</dd>
+<dt>Time (UTC) / host</dt><dd>2026-10-01T10:00:30Z &middot; DEMO-HOST</dd>
+<dt>Process</dt><dd class="mono">updater_sim.exe (PID 800) C:\Users\demo\AppData\Local\Temp\vestige_demo\updater_sim.exe<br>cmd: updater_sim.exe --demo<br>parent: C:\Windows\explorer.exe</dd><dt>Conditions met</dt><dd><ul><li>image path matches configured suspicious location &#39;*/appdata/local/temp/*&#39;</li><li>executable type &#39;.exe&#39;</li><li>no additional corroborating condition (location only)</li></ul></dd>
+<dt>Evidence</dt><dd><ul><li class="mono">{&#34;ts&#34;: &#34;2026-10-01T10:00:30Z&#34;, &#34;source&#34;: &#34;synthetic&#34;, &#34;kind&#34;: &#34;process_start&#34;, &#34;pid&#34;: 800, &#34;image&#34;: &#34;C:\\Users\\demo\\AppData\\Local\\Temp\\vestige_demo\\updater_sim.exe&#34;}</li></ul></dd>
+<dt>Confidence</dt><dd>low &mdash; Location alone is weak evidence; the alert states which extra condition (if any) raised severity.</dd>
+<dt>Possible false positives</dt><dd><ul><li>Software installers, self-updating applications, portable tools, developer build output.</li></ul></dd>
+<dt>Investigation steps</dt><dd><ul><li>Review the full image path, parent process and command line.</li><li>Check whether the executable is signed and whether the hash is known (IOC watchlist, internal software inventory).</li><li>Ask the user or owner whether they launched it.</li></ul></dd>
+<dt>Status</dt><dd>requires analyst review &middot; ID A-39adf4e944f4</dd>
+</dl></div>
+</details>
+<details class="alert sev-low" >
+<summary><span class="tag sev-low">LOW</span> <span class="mono">SHIELD-001</span> Process executed from a user-writable temporary location</summary>
+<div class="body"><dl>
+<dt>Observation</dt><dd>Process &#39;fetcher_sim.exe&#39; started from a configured temporary/user-writable location: C:\Users\demo\AppData\Local\Temp\vestige_demo\fetcher_sim.exe</dd>
+<dt>Time (UTC) / host</dt><dd>2026-10-01T10:00:30Z &middot; DEMO-HOST</dd>
+<dt>Process</dt><dd class="mono">fetcher_sim.exe (PID 800) C:\Users\demo\AppData\Local\Temp\vestige_demo\fetcher_sim.exe<br>parent: C:\Windows\explorer.exe</dd><dt>Conditions met</dt><dd><ul><li>image path matches configured suspicious location &#39;*/appdata/local/temp/*&#39;</li><li>executable type &#39;.exe&#39;</li><li>no additional corroborating condition (location only)</li></ul></dd>
+<dt>Evidence</dt><dd><ul><li class="mono">{&#34;ts&#34;: &#34;2026-10-01T10:00:30Z&#34;, &#34;source&#34;: &#34;synthetic&#34;, &#34;kind&#34;: &#34;process_start&#34;, &#34;pid&#34;: 800, &#34;image&#34;: &#34;C:\\Users\\demo\\AppData\\Local\\Temp\\vestige_demo\\fetcher_sim.exe&#34;}</li></ul></dd>
+<dt>Confidence</dt><dd>low &mdash; Location alone is weak evidence; the alert states which extra condition (if any) raised severity.</dd>
+<dt>Possible false positives</dt><dd><ul><li>Software installers, self-updating applications, portable tools, developer build output.</li></ul></dd>
+<dt>Investigation steps</dt><dd><ul><li>Review the full image path, parent process and command line.</li><li>Check whether the executable is signed and whether the hash is known (IOC watchlist, internal software inventory).</li><li>Ask the user or owner whether they launched it.</li></ul></dd>
+<dt>Status</dt><dd>requires analyst review &middot; ID A-39adf4e944f4</dd>
+</dl></div>
+</details>
+<details class="alert sev-low" >
+<summary><span class="tag sev-low">LOW</span> <span class="mono">SHIELD-006</span> High outbound connection activity from one process</summary>
+<div class="body"><dl>
+<dt>Observation</dt><dd>&#39;synctool.exe&#39; opened 26 new outbound connections to 26 distinct destinations within 60s</dd>
+<dt>Time (UTC) / host</dt><dd>2026-10-01T10:00:35Z &middot; DEMO-HOST</dd>
+<dt>Process</dt><dd class="mono">synctool.exe (PID 1200) C:\Program Files\SyncTool\synctool.exe<br>parent: C:\Windows\explorer.exe</dd><dt>Conditions met</dt><dd><ul><li>26 distinct destinations in 60s (threshold 25)</li></ul></dd>
+<dt>Evidence</dt><dd><ul><li class="mono">{&#34;ts&#34;: &#34;2026-10-01T10:00:31Z&#34;, &#34;source&#34;: &#34;synthetic&#34;, &#34;kind&#34;: &#34;network_connection&#34;, &#34;pid&#34;: 1200, &#34;image&#34;: &#34;C:\\Program Files\\SyncTool\\synctool.exe&#34;, &#34;remote_ip&#34;: &#34;104.21.21.5&#34;, &#34;remote_port&#34;: 443, &#34;state&#34;: &#34;ESTABLISHED&#34;, &#34;protocol&#34;: &#34;tcp&#34;}</li><li class="mono">{&#34;ts&#34;: &#34;2026-10-01T10:00:32Z&#34;, &#34;source&#34;: &#34;synthetic&#34;, &#34;kind&#34;: &#34;network_connection&#34;, &#34;pid&#34;: 1200, &#34;image&#34;: &#34;C:\\Program Files\\SyncTool\\synctool.exe&#34;, &#34;remote_ip&#34;: &#34;104.21.22.5&#34;, &#34;remote_port&#34;: 443, &#34;state&#34;: &#34;ESTABLISHED&#34;, &#34;protocol&#34;: &#34;tcp&#34;}</li><li class="mono">{&#34;ts&#34;: &#34;2026-10-01T10:00:33Z&#34;, &#34;source&#34;: &#34;synthetic&#34;, &#34;kind&#34;: &#34;network_connection&#34;, &#34;pid&#34;: 1200, &#34;image&#34;: &#34;C:\\Program Files\\SyncTool\\synctool.exe&#34;, &#34;remote_ip&#34;: &#34;104.21.23.5&#34;, &#34;remote_port&#34;: 443, &#34;state&#34;: &#34;ESTABLISHED&#34;, &#34;protocol&#34;: &#34;tcp&#34;}</li><li class="mono">{&#34;ts&#34;: &#34;2026-10-01T10:00:34Z&#34;, &#34;source&#34;: &#34;synthetic&#34;, &#34;kind&#34;: &#34;network_connection&#34;, &#34;pid&#34;: 1200, &#34;image&#34;: &#34;C:\\Program Files\\SyncTool\\synctool.exe&#34;, &#34;remote_ip&#34;: &#34;104.21.24.5&#34;, &#34;remote_port&#34;: 443, &#34;state&#34;: &#34;ESTABLISHED&#34;, &#34;protocol&#34;: &#34;tcp&#34;}</li><li class="mono">{&#34;ts&#34;: &#34;2026-10-01T10:00:35Z&#34;, &#34;source&#34;: &#34;synthetic&#34;, &#34;kind&#34;: &#34;network_connection&#34;, &#34;pid&#34;: 1200, &#34;image&#34;: &#34;C:\\Program Files\\SyncTool\\synctool.exe&#34;, &#34;remote_ip&#34;: &#34;104.21.25.5&#34;, &#34;remote_port&#34;: 443, &#34;state&#34;: &#34;ESTABLISHED&#34;, &#34;protocol&#34;: &#34;tcp&#34;}</li></ul></dd>
+<dt>Confidence</dt><dd>low &mdash; Browsers, sync clients, torrent and update software legitimately exceed any threshold; this is not evidence of command-and-control.</dd>
+<dt>Possible false positives</dt><dd><ul><li>Web browsers, cloud-sync clients, package managers, peer-to-peer software, security scanners.</li></ul></dd>
+<dt>Investigation steps</dt><dd><ul><li>Identify the process and whether such volume is expected.</li><li>Review destinations for patterns (single service vs. many unrelated hosts).</li><li>Add the process to allowlist_process_names if it is a known, approved application.</li></ul></dd>
+<dt>Status</dt><dd>requires analyst review &middot; 14 repeat(s) suppressed by cooldown &middot; ID A-6e9d4a60b67b</dd>
+</dl></div>
+</details>
+<details class="alert sev-low" >
+<summary><span class="tag sev-low">LOW</span> <span class="mono">SHIELD-005</span> Monitored file changed from baseline</summary>
+<div class="body"><dl>
+<dt>Observation</dt><dd>Monitored file modified: C:\Users\Mayank\AppData\Local\Temp\spyshield_demo_dpg6zoab\b.txt</dd>
+<dt>Time (UTC) / host</dt><dd>2026-10-01T10:01:00Z &middot; DEMO-HOST</dd>
+<dt>Process</dt><dd class="mono">b.txt (PID ) C:\Users\Mayank\AppData\Local\Temp\spyshield_demo_dpg6zoab\b.txt</dd><dt>Conditions met</dt><dd><ul><li>file modified compared with the baseline (sha256)</li><li>default severity for monitored paths</li><li>SHA-256 changed f144a6907dc4... -&gt; bd4c466384c3...</li></ul></dd>
+<dt>Evidence</dt><dd><ul><li class="mono">{&#34;ts&#34;: &#34;2026-10-01T10:01:00Z&#34;, &#34;source&#34;: &#34;fim&#34;, &#34;kind&#34;: &#34;file_change&#34;, &#34;pid&#34;: null, &#34;image&#34;: &#34;C:\\Users\\Mayank\\AppData\\Local\\Temp\\spyshield_demo_dpg6zoab\\b.txt&#34;, &#34;path&#34;: &#34;C:\\Users\\Mayank\\AppData\\Local\\Temp\\spyshield_demo_dpg6zoab\\b.txt&#34;, &#34;change&#34;: &#34;modified&#34;, &#34;sha256&#34;: &#34;bd4c466384c3e49fde840e12a25c98f982307af968917e25d8368c024c6b039c&#34;}</li></ul></dd>
+<dt>Confidence</dt><dd>high &mdash; A change is a fact, not a verdict. SpyShield cannot tell who changed the file or why (use OS auditing for attribution).</dd>
+<dt>Possible false positives</dt><dd><ul><li>Normal edits, application updates, log rotation, editors&#39; temporary files.</li></ul></dd>
+<dt>Investigation steps</dt><dd><ul><li>Confirm with the file owner whether the change was expected.</li><li>Compare content with a trusted copy or version control.</li><li>Review what else happened around the same time (alerts timeline).</li></ul></dd>
+<dt>Status</dt><dd>requires analyst review &middot; ID A-e17ee2b4e284</dd>
+</dl></div>
+</details>
+<details class="alert sev-low" >
+<summary><span class="tag sev-low">LOW</span> <span class="mono">SHIELD-001</span> Process executed from a user-writable temporary location</summary>
+<div class="body"><dl>
+<dt>Observation</dt><dd>Process &#39;runner_sim.exe&#39; started from a configured temporary/user-writable location: C:\Users\Public\runner_sim.exe</dd>
+<dt>Time (UTC) / host</dt><dd>2026-10-01T10:05:00Z &middot; DEMO-HOST</dd>
+<dt>Process</dt><dd class="mono">runner_sim.exe (PID 1100) C:\Users\Public\runner_sim.exe<br>parent: C:\Windows\explorer.exe</dd><dt>Conditions met</dt><dd><ul><li>image path matches configured suspicious location &#39;*/users/public/*&#39;</li><li>executable type &#39;.exe&#39;</li><li>no additional corroborating condition (location only)</li></ul></dd>
+<dt>Evidence</dt><dd><ul><li class="mono">{&#34;ts&#34;: &#34;2026-10-01T10:05:00Z&#34;, &#34;source&#34;: &#34;synthetic&#34;, &#34;kind&#34;: &#34;process_start&#34;, &#34;pid&#34;: 1100, &#34;image&#34;: &#34;C:\\Users\\Public\\runner_sim.exe&#34;}</li></ul></dd>
+<dt>Confidence</dt><dd>low &mdash; Location alone is weak evidence; the alert states which extra condition (if any) raised severity.</dd>
+<dt>Possible false positives</dt><dd><ul><li>Software installers, self-updating applications, portable tools, developer build output.</li></ul></dd>
+<dt>Investigation steps</dt><dd><ul><li>Review the full image path, parent process and command line.</li><li>Check whether the executable is signed and whether the hash is known (IOC watchlist, internal software inventory).</li><li>Ask the user or owner whether they launched it.</li></ul></dd>
+<dt>Status</dt><dd>requires analyst review &middot; ID A-53711bc63ffa</dd>
+</dl></div>
+</details>
+
+<h2>Labelled synthetic scenario results</h2>
+<p class="muted">Measured on hand-written synthetic scenarios designed alongside the rules; this is a regression check, NOT a production detection rate.</p>
+<div class="table-wrap"><table><tr><th>ID</th><th>Scenario</th><th>Label</th><th>Expected</th><th>Alerted</th><th>Outcome</th></tr>
+<tr><td>S01</td><td>Normal process activity</td><td>benign</td><td class="mono"></td><td class="mono"></td><td>TN</td></tr><tr><td>S02</td><td>Normal outbound connections (including non-80/443 ports, loopback, private)</td><td>benign</td><td class="mono"></td><td class="mono"></td><td>TN</td></tr><tr><td>S03</td><td>Simulated executable launched from a temp directory</td><td>should_alert</td><td class="mono">SHIELD-001</td><td class="mono">SHIELD-001</td><td>TP</td></tr><tr><td>S04</td><td>Simulated new Registry Run entry</td><td>should_alert</td><td class="mono">SHIELD-003</td><td class="mono">SHIELD-003</td><td>TP</td></tr><tr><td>S05</td><td>Simulated process from temp that makes an outbound connection</td><td>should_alert</td><td class="mono">SHIELD-001, SHIELD-004</td><td class="mono">SHIELD-001, SHIELD-004</td><td>TP</td></tr><tr><td>S06</td><td>Modified file in a temporary test folder</td><td>should_alert</td><td class="mono">SHIELD-005</td><td class="mono">SHIELD-005</td><td>TP</td></tr><tr><td>S07</td><td>Unchanged file baseline</td><td>benign</td><td class="mono"></td><td class="mono"></td><td>TN</td></tr><tr><td>S08</td><td>Configured hash IOC match (synthetic hash)</td><td>should_alert</td><td class="mono">SHIELD-009</td><td class="mono">SHIELD-009</td><td>TP</td></tr><tr><td>S09</td><td>Noisy application with &#39;Spy&#39;/&#39;Record&#39;/&#39;Capture&#39; in its name (must not get a malware verdict)</td><td>benign</td><td class="mono"></td><td class="mono"></td><td>TN</td></tr><tr><td>S10</td><td>Malformed Sysmon events mixed with valid benign events</td><td>benign</td><td class="mono"></td><td class="mono"></td><td>TN</td></tr><tr><td>S11</td><td>Document application launching a command interpreter</td><td>should_alert</td><td class="mono">SHIELD-002</td><td class="mono">SHIELD-002</td><td>TP</td></tr><tr><td>S12</td><td>New startup entry followed by execution of the referenced file</td><td>should_alert</td><td class="mono">SHIELD-001, SHIELD-003, SHIELD-008</td><td class="mono">SHIELD-001, SHIELD-003, SHIELD-008</td><td>TP</td></tr><tr><td>S13</td><td>High outbound destination count from one process</td><td>should_alert</td><td class="mono">SHIELD-006</td><td class="mono">SHIELD-006</td><td>TP</td></tr><tr><td>S14</td><td>Sysmon export: Office -&gt; PowerShell -&gt; outbound connection (ProcessGuid correlation)</td><td>should_alert</td><td class="mono">SHIELD-002, SHIELD-003, SHIELD-007</td><td class="mono">SHIELD-002, SHIELD-003, SHIELD-007</td><td>TP</td></tr></table></div>
+<p>TP 9 &middot; FN 0 &middot; TN 5 &middot; FP 0</p>
+
+<h2>Process observations (24)</h2>
+<div class="table-wrap"><table><tr><th>Start (UTC)</th><th>PID</th><th>Name</th><th>Image</th><th>Parent</th><th>Command line (redacted)</th></tr>
+<tr><td class="">2026-10-01T10:00:00Z</td><td class="">600</td><td class="">explorer.exe</td><td class="mono">C:\Windows\explorer.exe</td><td class="mono"></td><td class="mono"></td></tr>
+<tr><td class="">2026-10-01T10:00:10Z</td><td class="">700</td><td class="">chrome.exe</td><td class="mono">C:\Program Files\Google\Chrome\Application\chrome.exe</td><td class="mono">C:\Windows\explorer.exe</td><td class="mono">chrome.exe --profile-directory=Default</td></tr>
+<tr><td class="">2026-10-01T10:00:12Z</td><td class="">710</td><td class="">notepad.exe</td><td class="mono">C:\Windows\System32\notepad.exe</td><td class="mono">C:\Windows\explorer.exe</td><td class="mono"></td></tr>
+<tr><td class="">2026-10-01T10:00:00Z</td><td class="">600</td><td class="">explorer.exe</td><td class="mono">C:\Windows\explorer.exe</td><td class="mono"></td><td class="mono"></td></tr>
+<tr><td class="">2026-10-01T10:00:10Z</td><td class="">700</td><td class="">chrome.exe</td><td class="mono">C:\Program Files\Google\Chrome\Application\chrome.exe</td><td class="mono">C:\Windows\explorer.exe</td><td class="mono"></td></tr>
+<tr><td class="">2026-10-01T10:00:00Z</td><td class="">600</td><td class="">explorer.exe</td><td class="mono">C:\Windows\explorer.exe</td><td class="mono"></td><td class="mono"></td></tr>
+<tr><td class="">2026-10-01T10:00:30Z</td><td class="">800</td><td class="">updater_sim.exe</td><td class="mono">C:\Users\demo\AppData\Local\Temp\vestige_demo\updater_sim.exe</td><td class="mono">C:\Windows\explorer.exe</td><td class="mono">updater_sim.exe --demo</td></tr>
+<tr><td class="">2026-10-01T10:00:00Z</td><td class="">600</td><td class="">explorer.exe</td><td class="mono">C:\Windows\explorer.exe</td><td class="mono"></td><td class="mono"></td></tr>
+<tr><td class="">2026-10-01T10:00:30Z</td><td class="">800</td><td class="">fetcher_sim.exe</td><td class="mono">C:\Users\demo\AppData\Local\Temp\vestige_demo\fetcher_sim.exe</td><td class="mono">C:\Windows\explorer.exe</td><td class="mono"></td></tr>
+<tr><td class="">2026-10-01T10:00:00Z</td><td class="">600</td><td class="">explorer.exe</td><td class="mono">C:\Windows\explorer.exe</td><td class="mono"></td><td class="mono"></td></tr>
+<tr><td class="">2026-10-01T10:00:40Z</td><td class="">810</td><td class="">demoapp.exe</td><td class="mono">C:\Program Files\DemoApp\demoapp.exe</td><td class="mono">C:\Windows\explorer.exe</td><td class="mono"></td></tr>
+<tr><td class="">2026-10-01T10:00:00Z</td><td class="">600</td><td class="">explorer.exe</td><td class="mono">C:\Windows\explorer.exe</td><td class="mono"></td><td class="mono"></td></tr>
+<tr><td class="">2026-10-01T10:00:05Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">C:\Program Files\SpyGlass\SpyGlass-Recorder.exe</td><td class="mono">C:\Windows\explorer.exe</td><td class="mono">SpyGlass-Recorder.exe --capture-screen-demo</td></tr>
+<tr><td class="">2026-10-01T10:00:00Z</td><td class="">800</td><td class="">notepad.exe</td><td class="mono">C:\Windows\System32\notepad.exe</td><td class="mono">C:\Windows\explorer.exe</td><td class="mono"></td></tr>
+<tr><td class="">2026-10-01T10:00:00Z</td><td class="">600</td><td class="">explorer.exe</td><td class="mono">C:\Windows\explorer.exe</td><td class="mono"></td><td class="mono"></td></tr>
+<tr><td class="">2026-10-01T10:00:10Z</td><td class="">1000</td><td class="">WINWORD.EXE</td><td class="mono">C:\Program Files\Microsoft Office\root\Office16\WINWORD.EXE</td><td class="mono">C:\Windows\explorer.exe</td><td class="mono"></td></tr>
+<tr><td class="">2026-10-01T10:00:25Z</td><td class="">1010</td><td class="">powershell.exe</td><td class="mono">C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe</td><td class="mono">C:\Program Files\Microsoft Office\root\Office16\WINWORD.EXE</td><td class="mono">powershell.exe -NoProfile -Command Get-Date</td></tr>
+<tr><td class="">2026-10-01T10:00:00Z</td><td class="">600</td><td class="">explorer.exe</td><td class="mono">C:\Windows\explorer.exe</td><td class="mono"></td><td class="mono"></td></tr>
+<tr><td class="">2026-10-01T10:05:00Z</td><td class="">1100</td><td class="">runner_sim.exe</td><td class="mono">C:\Users\Public\runner_sim.exe</td><td class="mono">C:\Windows\explorer.exe</td><td class="mono"></td></tr>
+<tr><td class="">2026-10-01T10:00:00Z</td><td class="">600</td><td class="">explorer.exe</td><td class="mono">C:\Windows\explorer.exe</td><td class="mono"></td><td class="mono"></td></tr>
+<tr><td class="">2026-10-01T10:00:05Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">C:\Program Files\SyncTool\synctool.exe</td><td class="mono">C:\Windows\explorer.exe</td><td class="mono"></td></tr>
+<tr><td class="">2026-10-01T10:00:00Z</td><td class="">600</td><td class="">explorer.exe</td><td class="mono">C:\Windows\explorer.exe</td><td class="mono">C:\Windows\System32\userinit.exe</td><td class="mono">C:\Windows\Explorer.EXE</td></tr>
+<tr><td class="">2026-10-01T10:00:10.100000Z</td><td class="">1000</td><td class="">WINWORD.EXE</td><td class="mono">C:\Program Files\Microsoft Office\root\Office16\WINWORD.EXE</td><td class="mono">C:\Windows\explorer.exe</td><td class="mono">&#34;WINWORD.EXE&#34; &#34;C:\Users\demo\Documents\invoice_demo.docx&#34;</td></tr>
+<tr><td class="">2026-10-01T10:00:25.500000Z</td><td class="">1010</td><td class="">powershell.exe</td><td class="mono">C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe</td><td class="mono">C:\Program Files\Microsoft Office\root\Office16\WINWORD.EXE</td><td class="mono">powershell.exe -NoProfile -Command &#34;Get-Date; $x=&#39;https://demo.example/a?token=[REDACTED]&#39;&#34; --password=[REDACTED]</td></tr>
+</table></div>
+
+<h2>Network observations (128)</h2>
+<div class="table-wrap"><table><tr><th>Time (UTC)</th><th>PID</th><th>Process</th><th>Remote IP</th><th>Port</th><th>Class</th><th>State</th></tr>
+<tr><td class="">2026-10-01T10:00:20Z</td><td class="">700</td><td class="">chrome.exe</td><td class="mono">142.250.77.14</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:21Z</td><td class="">700</td><td class="">chrome.exe</td><td class="mono">142.250.77.14</td><td class="">5228</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:22Z</td><td class="">700</td><td class="">chrome.exe</td><td class="mono">104.18.20.10</td><td class="">8443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:23Z</td><td class="">700</td><td class="">chrome.exe</td><td class="mono">127.0.0.1</td><td class="">49693</td><td class="">loopback</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:24Z</td><td class="">700</td><td class="">chrome.exe</td><td class="mono">192.168.1.10</td><td class="">445</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:01:15Z</td><td class="">800</td><td class="">fetcher_sim.exe</td><td class="mono">104.20.30.50</td><td class="">8443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:10Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">104.20.31.1</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:12Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">104.20.31.2</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:14Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">104.20.31.3</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:16Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">104.20.31.4</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:18Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">104.20.31.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:20Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">104.20.31.6</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:22Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">104.20.31.7</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:24Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">104.20.31.8</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:26Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">104.20.31.9</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:28Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">104.20.31.10</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:30Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">104.20.31.11</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:32Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">104.20.31.12</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:34Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">104.20.31.13</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:36Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">104.20.31.14</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:38Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">104.20.31.15</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:40Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">104.20.31.16</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:42Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">104.20.31.17</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:44Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">104.20.31.18</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:46Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">104.20.31.19</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:48Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">104.20.31.20</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:11Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.1</td><td class="">8000</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:12Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.2</td><td class="">8001</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:13Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.3</td><td class="">8002</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:14Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.4</td><td class="">8003</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:15Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.5</td><td class="">8004</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:16Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.6</td><td class="">8005</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:17Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.7</td><td class="">8006</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:18Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.8</td><td class="">8007</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:19Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.9</td><td class="">8008</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:20Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.10</td><td class="">8009</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:21Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.11</td><td class="">8010</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:22Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.12</td><td class="">8011</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:23Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.13</td><td class="">8012</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:24Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.14</td><td class="">8013</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:25Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.15</td><td class="">8014</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:26Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.16</td><td class="">8015</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:27Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.17</td><td class="">8016</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:28Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.18</td><td class="">8017</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:29Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.19</td><td class="">8018</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:30Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.20</td><td class="">8019</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:31Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.1</td><td class="">8020</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:32Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.2</td><td class="">8021</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:33Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.3</td><td class="">8022</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:34Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.4</td><td class="">8023</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:35Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.5</td><td class="">8024</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:36Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.6</td><td class="">8025</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:37Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.7</td><td class="">8026</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:38Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.8</td><td class="">8027</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:39Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.9</td><td class="">8028</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:40Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.10</td><td class="">8029</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:41Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.11</td><td class="">8030</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:42Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.12</td><td class="">8031</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:43Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.13</td><td class="">8032</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:44Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.14</td><td class="">8033</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:45Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.15</td><td class="">8034</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:46Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.16</td><td class="">8035</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:47Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.17</td><td class="">8036</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:48Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.18</td><td class="">8037</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:49Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.19</td><td class="">8038</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:50Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.20</td><td class="">8039</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:51Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.1</td><td class="">8040</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:52Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.2</td><td class="">8041</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:53Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.3</td><td class="">8042</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:54Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.4</td><td class="">8043</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:55Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.5</td><td class="">8044</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:56Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.6</td><td class="">8045</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:57Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.7</td><td class="">8046</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:58Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.8</td><td class="">8047</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:59Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.9</td><td class="">8048</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:01:00Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.10</td><td class="">8049</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:01:01Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.11</td><td class="">8050</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:01:02Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.12</td><td class="">8051</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:01:03Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.13</td><td class="">8052</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:01:04Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.14</td><td class="">8053</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:01:05Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.15</td><td class="">8054</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:01:06Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.16</td><td class="">8055</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:01:07Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.17</td><td class="">8056</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:01:08Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.18</td><td class="">8057</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:01:09Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.19</td><td class="">8058</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:01:10Z</td><td class="">900</td><td class="">SpyGlass-Recorder.exe</td><td class="mono">10.0.0.20</td><td class="">8059</td><td class="">private</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:10Z</td><td class="">800</td><td class="">notepad.exe</td><td class="mono">142.250.77.14</td><td class="">443</td><td class="">public</td><td class="">CONNECT</td></tr>
+<tr><td class="">2026-10-01T10:00:10Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.0.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:11Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.1.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:12Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.2.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:13Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.3.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:14Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.4.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:15Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.5.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:16Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.6.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:17Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.7.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:18Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.8.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:19Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.9.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:20Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.10.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:21Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.11.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:22Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.12.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:23Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.13.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:24Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.14.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:25Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.15.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:26Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.16.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:27Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.17.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:28Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.18.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:29Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.19.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:30Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.20.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:31Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.21.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:32Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.22.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:33Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.23.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:34Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.24.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:35Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.25.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:36Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.26.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:37Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.27.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:38Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.28.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:39Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.29.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:40Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.30.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:41Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.31.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:42Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.32.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:43Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.33.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:44Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.34.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:45Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.35.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:46Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.36.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:47Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.37.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:48Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.38.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:49Z</td><td class="">1200</td><td class="">synctool.exe</td><td class="mono">104.21.39.5</td><td class="">443</td><td class="">public</td><td class="">ESTABLISHED</td></tr>
+<tr><td class="">2026-10-01T10:00:40.250000Z</td><td class="">1010</td><td class="">powershell.exe</td><td class="mono">104.20.30.50</td><td class="">443</td><td class="">public</td><td class="">CONNECT</td></tr>
+</table></div>
+
+<h2>File integrity changes (2)</h2>
+<div class="table-wrap"><table><tr><th>Time (UTC)</th><th>Change</th><th>Path</th><th>Basis</th></tr>
+<tr><td class="">2026-10-01T10:01:00Z</td><td class="">modified</td><td class="mono">C:\Users\Mayank\AppData\Local\Temp\spyshield_demo_dpg6zoab\b.txt</td><td class="">sha256</td></tr>
+<tr><td class="">2026-10-01T10:00:50Z</td><td class="">created</td><td class="mono">C:\Users\Public\runner_sim.exe</td><td class=""></td></tr>
+</table></div>
+
+<h2>Persistence changes (3)</h2>
+<div class="table-wrap"><table><tr><th>Time (UTC)</th><th>Change</th><th>Location</th><th>Entry</th><th>Target</th></tr>
+<tr><td class="">2026-10-01T10:00:20Z</td><td class="">added</td><td class="mono">HKCU\Software\Microsoft\Windows\CurrentVersion\Run</td><td class="">SystemHelperDemo</td><td class="mono">C:\Users\Public\helper_sim.exe</td></tr>
+<tr><td class="">2026-10-01T10:00:20Z</td><td class="">added</td><td class="mono">HKCU\Software\Microsoft\Windows\CurrentVersion\Run</td><td class="">UpdaterDemo</td><td class="mono">C:\Users\Public\runner_sim.exe</td></tr>
+<tr><td class="">2026-10-01T10:00:55Z</td><td class="">modified</td><td class="mono">sysmon-registry</td><td class="">DemoUpdater</td><td class="mono">C:\Users\Public\runner_sim.exe</td></tr>
+</table></div>
+
+<h2>MITRE ATT&amp;CK references</h2>
+<ul><li><strong>T1547.001</strong> Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder <span class="muted">(rules: SHIELD-003, SHIELD-008)</span></li></ul>
+<p class="muted">Mappings are applied only where the observed evidence matches the technique's mechanism; they describe behaviour, not attacker intent.</p>
+
+
+<h2>Detection limitations</h2>
+<ul><li>SpyShield polls user-mode APIs: processes or connections that start and end between polls are not seen.</li><li>Network connections are attributed to processes only when the OS exposes the PID to this user; run privileges affect completeness.</li><li>Alerts are observations that need analyst review. They are not verdicts of malware, and SpyShield cannot reliably detect keyloggers.</li><li>File integrity results show that a file changed, not who changed it or why.</li><li>Sysmon-based rules work only when the relevant Sysmon events (1, 3, 11, 13, 22) are enabled in the Sysmon configuration.</li></ul>
+<h2>Notes</h2><ul><li>All events are synthetic fixtures; see samples/demo_scenarios.json.</li></ul><footer>Generated by SpyShield &middot; schema 1.0. Defensive, read-only monitoring: SpyShield never terminates processes or changes the system.</footer>
+</main>
+</body>
+</html>
